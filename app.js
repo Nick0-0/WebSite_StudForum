@@ -42,8 +42,6 @@ app.use((err, req, res, next) => { //the global error handler
 //connecting to DB
 db.connect() //connecting to DB
     .then(() => {
-        console.log('Successful connect with DataBase');
-
         //server start
         app.listen(port, () => {
             console.log(`Server started on port ${port}`);
@@ -58,4 +56,10 @@ db.connect() //connecting to DB
 // additional processing of routes not found
 app.use((req, res) => {
     res.status(404).send("Page not found");
+});
+
+//in the shutdown case
+process.on('SIGINT', () => {
+    db.close();
+    process.exit(0);
 });
