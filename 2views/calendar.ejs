@@ -1,0 +1,11 @@
+<h2>Календарь событий</h2>
+<div id="events">
+    <% if (events) { %>
+        <% events.forEach(event => { %>
+            <div class="event">
+                <h3><%= event.title %></h3>
+                <p><%= event.date %></p>
+            </div>
+        <% }) %>
+    <% } %>
+</div>

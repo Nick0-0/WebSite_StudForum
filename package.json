@@ -1,0 +1,22 @@
+{
+  "name": "studforum",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Nick",
+  "license": "ISC",
+  "dependencies": {
+    "@tootallnate/once": "^3.0.1",
+    "cacache": "^20.0.4",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "git": "^0.1.5",
+    "nodemon": "^3.1.14",
+    "sqlite3": "^5.0.2",
+    "tar": "^7.5.13"
+  }
+}
