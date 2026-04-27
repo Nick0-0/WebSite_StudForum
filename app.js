@@ -13,6 +13,7 @@ const port = process.env.PORT || 3000; //defining the server launch port
 dotenv.config(); //loading of vars form .env to process.env
 
 //middlewares for data parsing
+app.use(cors());
 app.use(express.json()); //parse input JSON to JS-object (req.body)
 app.use(express.urlencoded({extended: true})); // parse input data form HTML-forms to object
 
