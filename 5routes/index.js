@@ -1,8 +1,13 @@
+//main routes
 const express = require('express');
 const router = express.Router();
 
 //Controllers Import
 const userController = require('../3controllers/userController');
+
+//middleware for authorization control
+// const {isAuthenticated} = require('../')
+//при добавлении проверки авторизации раскомментировать
 
 //Routes
 router.get('/', (req, res) => {
@@ -22,6 +27,13 @@ router.get('/forum', (req, res) => {
 });
 router.get('/profile', (req, res) => {
     res.render('profile');
+});
+
+//adding error handler
+router.use ((req, res, next) => {
+    const error = new Error('Invalid route');
+    error.status = 404;
+    next(error);
 });
 
 module.exports = router;

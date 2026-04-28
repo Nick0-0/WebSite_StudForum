@@ -6,6 +6,11 @@ const {DB_PATH = "DataBase.db"} = process.env; //using the enviroment vars
 const connectToDataBase = () => {
     return new Promise((resolve, reject) => { //returning the promise to async working
         const db = new sqlite3.Database(path.join(__dirname, DB_PATH), //creating a secure path to BD file
+            {
+                readonly: false,
+                extendedResultTypes: true
+            },
+        
             (err) => {
                 if (err) {
                     console.error('Failed to connect to the DataBase:', err.message); //error logging
@@ -28,11 +33,33 @@ module.exports = {
             throw new Error('Failed to connect to the DB', error); //creating error in error case
         }
     },
-    close() { //closing connect method
+    async close() { //closing connect method
         if (this.db) {
-            this.db.close(() => {
-                console.log('DB closed'); //informing about closing
+            return new Promise((resolve, reject) => {
+                this.db.close((err) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    console.log('DB closed');
+                    resolve();
+                });
             });
+        }
+    },
+    async query(sql, params = []) {
+        try {
+            const results = await new Promise((resolve, reject) => {
+                this.db.all(sql, params, (err, rows) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(rows);
+                });
+            });
+            return results;
+        }
+        catch (error) {
+            throw new Error('Request process error', {cause: error});
         }
     }
 };
