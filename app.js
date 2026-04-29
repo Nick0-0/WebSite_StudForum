@@ -60,7 +60,12 @@ db.connect() //connecting to DB
 
 
 //in the shutdown case
-process.on('SIGINT', () => {
-    db.close();
-    process.exit(0);
+process.on('SIGINT', async () => {
+    try {
+        await db.close();
+        process.exit(0);
+    } catch (error) {
+        console.error('Error closing DB connection:', error);
+        process.exit(1);
+    }
 });
