@@ -61,5 +61,40 @@ module.exports = {
         catch (error) {
             throw new Error('Request process error', {cause: error});
         }
+    },
+    async run(sql, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.run(sql, params, function(err) {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(this.lastID);
+            });
+        });
+    },
+    async each(sql, params = [], callback) {
+        return new Promise((resolve, reject) => {
+            this.db.each(sql, params, (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
+                callback(row);
+            }, err => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+    }, 
+    async prepare(sql, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.prepare(sql, params, (err, stmt) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(stmt);
+            });
+        });
     }
 };
