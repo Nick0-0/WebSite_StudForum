@@ -2,9 +2,6 @@
 const express = require('express');
 const router = express.Router();
 
-//Controllers Import
-const userController = require('../3controllers/userController');
-
 //middleware for authorization control
 // const {isAuthenticated} = require('../')
 //при добавлении проверки авторизации раскомментировать
@@ -27,9 +24,6 @@ router.get('/forum', (req, res) => {
 });
 router.get('/profile', (req, res) => {
     res.render('profile');
-});
-router.get('/users-list', (req, res) => {
-    res.render('users');
 });
 
 //adding error handler
