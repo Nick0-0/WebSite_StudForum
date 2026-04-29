@@ -20,12 +20,12 @@ app.use(express.urlencoded({extended: true})); // parse input data form HTML-for
 //setting of logging
 app.use(logger('dev')); //connecting of middleware logging in develop mode
 
-//Static files
-app.use(express.static('1public')); // set route to static files
-
 //Settings EJS
 app.set('view engine', 'ejs'); //set EJS as default template engine
 app.set('views', './2views'); //route to dir with EJS-templates
+
+//Static files
+app.use(express.static('1public')); // set route to static files
 
 //Connecting routes
 const indexRouter = require('./5routes/index'); //import of main router
@@ -38,6 +38,11 @@ app.use((err, req, res, next) => { //the global error handler
         message: 'An internal server error has occured',
         error: err.message
     });
+});
+
+// additional processing of routes not found
+app.use((req, res) => {
+    res.status(404).send("Page not found");
 });
 
 //connecting to DB
@@ -53,11 +58,6 @@ db.connect() //connecting to DB
         process.exit(1); //ending the process with an error code
     });
 
-
-// additional processing of routes not found
-app.use((req, res) => {
-    res.status(404).send("Page not found");
-});
 
 //in the shutdown case
 process.on('SIGINT', () => {
