@@ -8,11 +8,4 @@ router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 
 
-//404 error handler
-router.use((req, res, next) => {
-    const error = new Error('Invalid route');
-    error.status = 404;
-    next(error);
-});
-
 module.exports = router;
