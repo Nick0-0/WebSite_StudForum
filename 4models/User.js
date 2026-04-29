@@ -18,7 +18,7 @@ class User {
         return result.insertId;
     }
 
-    static async findByID(id) {
+    static async getByID(id) {
         //Search user by ID
         const db = new Database();
         const result = await db.query(
