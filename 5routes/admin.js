@@ -1,6 +1,9 @@
 //admins routes
 const router = require('express').Router();
 const userController = require('../3controllers/userController');
+const documentController = require('../3controllers/documentController');
+const calendarController = require('../3controllers/calendarController');
+const forumController = require('../3controllers/forumController');
 
 //user management section
 //getting all users list
@@ -20,25 +23,19 @@ router.delete('/documents/:id', userController.deleteDocument);
 
 //events management section
 //getting all events list
-router.get('/events', userController.getEvents);
+router.get('/events', calendarController.getEvents);
 //creating new event
-router.post('/events', userController.createEvent);
+router.post('/events', calendarController.createEvent);
 //updating event by id
-router.put('/events/:id', userController.updateEvent);
+router.put('/events/:id', calendarController.updateEvent);
 //deleting event by id
-router.delete('/events/:id', userController.deleteEvent);
+router.delete('/events/:id', calendarController.deleteEvent);
 
 //getting all topics list
-router.get('/topics', userController.getTopics);
+router.get('/topics', forumController.getTopics);
 //deleting topic by id
-router.delete('/topics/:id', userController.deleteTopic);
+router.delete('/topics/:id', forumController.deleteTopic);
 
-//middleware for error handler
-router.use((req, res, next) => {
-    const error = new Error('Invalid route');
-    error.status = 404;
-    next(error);
-});
 
 //export router for app using
 module.exports = router;

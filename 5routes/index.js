@@ -28,6 +28,9 @@ router.get('/forum', (req, res) => {
 router.get('/profile', (req, res) => {
     res.render('profile');
 });
+router.get('/users-list', (req, res) => {
+    res.render('users');
+});
 
 //adding error handler
 router.use ((req, res, next) => {
