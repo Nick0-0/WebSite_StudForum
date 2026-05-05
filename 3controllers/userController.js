@@ -1,36 +1,50 @@
-const User = require('../4models/User');//import User
+const {Student, Admin} = require('../4models/User');//import User
 const bcrypt = require('bcrypt');//import library bcrypt from Node.js
 const jwt = require('jsonwebtoken');//import ...
+const {JWT_SECRET, JWT_EXPIRES_IN} = require('dotenv').config().parsed;
 
 //user registration
 exports.register = async (req, res) => {
     try {
         //getting data from request
         const {
-            username, password, first_name, last_name,
-            email, phone_number, course, faculty,
-            group_number
+            login, password, role, email
         } = req.body;
+
+       if (!['admin', 'student'].includes(role)) {
+        return res.status(400).json({message: 'Invalid role'});
+       }
+
+       let userModel = role === 'admin' ? Admin : Student;
+
+        //checking of exist
+        const existingUser = await userModel.findByLogin(login);
+        if (existingUser) {
+            return res.status(409).json({message: 'User with this login is already exists'});
+        }
+
         //heshing the pass
         const hashedPassword = await bcrypt.hash(password, 10);
         //creating new user
-        const user = await User.create({
-            username, password: hashedPassword, 
-            first_name, last_name,
-            email, phone_number, course, faculty,
-            group_number
+        const newUser = new userModel({
+            login,
+            password: hashedPassword,
+            role, email,
+            ...req.body
         });
+        await newUser.create();
+
+        //token generation
+        const token = jwt.sign({
+            id: newUser.id,
+            role: newUser.role
+        }, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
+
         res.status(201).json({
-            id: user.id,
-            login: user.login,
-            first_name: user.first_name,
-            last_name: user.last_name
+            message: 'User has been Successful registrated',
+            token
         });
     } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({error: 'User with this login or email is already exists'});
-        }
-
         res.status(500).json({error: 'Registration error'});
     }
 };
@@ -40,11 +54,15 @@ exports.login = async (req, res) => {
     try {
         //getting data from request
         const {login, password} = req.body;
-        //searching the user by login
-        const user = await User.getByLogin(login);
-        //login check
+
+        let user = null;
+
+        user = await Admin.findByLogin(login);
         if (!user) {
-            return res.status(401).json({error: 'Invalid login or password'});
+            user = await Student.findByLogin(login);
+        }
+        if (!user) {
+            return res.status(401).json({message: 'Ivalid login or password'});
         }
         //comparing pass
         const isPassValid = await bcrypt.compare(password, user.password);
@@ -55,19 +73,13 @@ exports.login = async (req, res) => {
         //creating JWT token
         const token = jwt.sign({
             id: user.id,
-            login: user.login,
             role: user.role
-        }, process.env.JWT_SECRET, process.env.JWT_EXPIRES_IN);
+        }, process.env.JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
 
         //returning token and user's data
         res.json({
-            token, 
-            user: {
-                id: user.id,
-                login: user.login,
-                first_name: user.first_name,
-                last_name: user.last_name
-            }
+            message: 'Successful authorized',
+            token
         });
     } catch (error) {
         res.status(500).json({error: 'Auth error'});
@@ -75,73 +87,92 @@ exports.login = async (req, res) => {
 };
 
 //getting users list
-exports.getUsers = async (req, res) => {
+exports.getUser = async (req, res) => {
     try {
-        const users = await User.getAll();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({error: 'Get users list error'});
-    }
-};
+        const userId = req.params.id;
+        let userModel;
 
-//getting user by ID
-exports.getUserById = async (req, res) => {
-    const {id} = req.params;
-    try {
-        const user = await User.getById(id);
+        if (req.user.role === 'admin') {
+            userModel = Admin;
+        } else {
+            userModel = Student;
+        }
+
+        const user = await User.FindById(userId);
 
         if (!user) {
-            return res.status(404).json({error: 'User not found'});
+            return res.status(404).json({message: 'User not found'});
         }
-        res.json(user);
+
+        const {password, ...userData} = user.toObject();
+        res.json(userData);
     } catch (error) {
-        res.status(500).json({error: 'Get user error'});
+        res.status(500).json({error: 'Get user data error'});
     }
 };
 
 //updating user
 exports.updateUser = async (req, res) => {
-    const {id} = req.params;
-    const {
-        first_name, last_name, email, phone_number,
-        course, faculty, group_number, photo, 
-        description
-    } = req.body;
     try {
-        const updatedUser = await User.update(id, {
-            first_name, last_name, email, phone_number,
-            course, faculty, group_number, photo,
-            description
-        });
-
-        if (!updatedUser) {
-            return res.status(404).json({error: 'User not found'});
+        const userId = req.params.id;
+        const updateData = req.body;
+        
+        //checking access rights
+        if (req.user.id !== userId && req.user.role !== 'admin') {
+            return req.status(403).json({message: 'No access rights'});
         }
-        res.status(200).json({
-            message: 'User has been successfully updated',
-            user: updatedUser
-        })
+
+        let userModel;
+        if (req.user.role === 'admin') {
+            userModel = Admin;
+        } else {
+            userModel = Student;
+        }
+
+        //updating
+        const user = await userModel.FindById(userId);
+        if (!user) {
+            return res.status(404).json({message: 'User not found'});
+        }
+
+        Object.assign(user, updateData);
+
+        if (updateData.password) {
+            user.password = await bcrypt.hash(updateData.password, 10);
+        }
+
+        await user.update();
+        res.json({message: 'Successful data updated'});
     } catch (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({error: 'User not found'});
-        }
-
         res.status(500).json({error: 'Update user error'});
     }
 };
 
 //deleting user
 exports.deleteUser = async (req, res) => {
-    const {id} = req.params;
-
     try {
-        const deletedUser = await User.delete(id);
-        if (!deletedUser) {
-            return req.status(404).json({error: 'User not found'});
+        const userId = req.params.id;
+        
+        if (req.user.id !== userId && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Not access rights' });
         }
-        res.status(204).send();
+
+        let userModel;
+        if (req.user.role === 'admin') {
+            userModel = Admin;
+        } else {
+            userModel = Student;
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await user.delete();
+        res.json({ message: 'User was deleted' });
     } catch (error) {
-        res.status(500).json({error: 'Delete user error'});
+        res.status(500).json({ message: 'Delete user error', error: error.message });
     }
 };
 
@@ -157,4 +188,109 @@ exports.checkUser = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({error: 'Check user error'});
     }
+
+    exports.logout = async (req, res) => {
+        try {
+            res.json({ message: 'Successful logout' });
+        } catch (error) {
+            res.status(500).json({ message: 'logout error', error: error.message });
+        }
+    };
+
+    //template for future recovery func
+    exports.passwordRecovery = async (req, res) => {
+        try {
+            const {email} = req.body;
+
+            let user = await Admin.findByEmail(email);
+            if (!user) {
+                user = await Student.findByEmail(email);
+            }
+
+            if (!user) {
+                return res.status(404).json({message: 'User not found'});
+            }
+
+            res.json({message: 'Recovery Request received'});
+        } catch (error) {
+            res.status(500).json({message: 'Recovery error'});
+        }
+    };
+
+    //getting the all users list
+    exports.getAllUsers = async (req, res) => {
+        try {
+            if (req.user.role !== 'admin') {
+                return res.status(403).json({message: 'Not access rights'});
+            }
+
+            const admins = await Admin.find();
+            const students = await Student.find();
+
+            res.json({
+                admins: admins.map(admin => admin.toObject()),
+                students: students.map(student => student.toObject())
+            });
+        } catch (error) {
+            res.status(500).json({message: 'Get all users list error', error: error.message});
+        }
+    };
+
+    //getting students list
+    exports.getAllStudents = async (req, res) => {
+        try {
+            if (req.user.role !== 'admin') {
+                return res.status(403).json({message: 'Not access rights'});
+            }
+
+            const students = await Student.find();
+
+            res.json({
+                students: students.map(student => student.toObject())
+            });
+        } catch (error) {
+            res.status(500).json({message: 'Get all students list error', error: error.message});
+        }
+    };
+
+    //getting admins list
+    exports.getAllAdmins = async (req, res) => {
+        try {
+            if (req.user.role !== 'admin') {
+                return res.status(403).json({message: 'Not access rights'});
+            }
+
+            const admins = await Admin.find();
+
+            res.json({
+                admins: admins.map(admin => admin.toObject())
+            });
+        } catch (error) {
+            res.status(500).json({message: 'Get all admins list error', error: error.message});
+        }
+    };
+
+    //searching user by email
+    exports.findByEmail = async (req, res) => {
+        try {
+            const {email} = req.body;
+
+            if (!email) {
+                return res.status(400).json({message: 'Email does not exist'});
+            }
+
+            let user = await Admin.findByEmail(email);
+            if (!user) {
+                user = await Student.findByEmail(email);
+            }
+            if (!user) {
+                return res.status(404).json({message: 'User not found'});
+            }
+
+            const {password, ...userData} = user.toObject();
+            res.json(userData);
+        } catch (error) {
+            res.status(500).json({message: 'Find user by email error', error: error.message});
+        }
+    };
 };
