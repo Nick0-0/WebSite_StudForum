@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
         } = req.body;
 
        if (!['admin', 'student'].includes(role)) {
-        return res.status(400).json({message: 'Invalid role'});
+        return res.status(400).json({error: 'Invalid role'});
        }
 
        let userModel = role === 'admin' ? Admin : Student;
@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
         //checking of exist
         const existingUser = await userModel.findByLogin(login);
         if (existingUser) {
-            return res.status(409).json({message: 'User with this login is already exists'});
+            return res.status(409).json({error: 'User with this login is already exists'});
         }
 
         //heshing the pass
@@ -62,7 +62,7 @@ exports.login = async (req, res) => {
             user = await Student.findByLogin(login);
         }
         if (!user) {
-            return res.status(401).json({message: 'Ivalid login or password'});
+            return res.status(401).json({error: 'Ivalid login or password'});
         }
         //comparing pass
         const isPassValid = await bcrypt.compare(password, user.password);
@@ -101,7 +101,7 @@ exports.getUser = async (req, res) => {
         const user = await User.FindById(userId);
 
         if (!user) {
-            return res.status(404).json({message: 'User not found'});
+            return res.status(404).json({error: 'User not found'});
         }
 
         const {password, ...userData} = user.toObject();
@@ -119,7 +119,7 @@ exports.updateUser = async (req, res) => {
         
         //checking access rights
         if (req.user.id !== userId && req.user.role !== 'admin') {
-            return req.status(403).json({message: 'No access rights'});
+            return req.status(403).json({error: 'No access rights'});
         }
 
         let userModel;
@@ -132,7 +132,7 @@ exports.updateUser = async (req, res) => {
         //updating
         const user = await userModel.FindById(userId);
         if (!user) {
-            return res.status(404).json({message: 'User not found'});
+            return res.status(404).json({error: 'User not found'});
         }
 
         Object.assign(user, updateData);
@@ -142,7 +142,7 @@ exports.updateUser = async (req, res) => {
         }
 
         await user.update();
-        res.json({message: 'Successful data updated'});
+        res.json({error: 'Successful data updated'});
     } catch (error) {
         res.status(500).json({error: 'Update user error'});
     }
@@ -154,7 +154,7 @@ exports.deleteUser = async (req, res) => {
         const userId = req.params.id;
         
         if (req.user.id !== userId && req.user.role !== 'admin') {
-            return res.status(403).json({ message: 'Not access rights' });
+            return res.status(403).json({ error: 'Not access rights' });
         }
 
         let userModel;
@@ -166,11 +166,11 @@ exports.deleteUser = async (req, res) => {
 
         const user = await userModel.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
         await user.delete();
-        res.json({ message: 'User was deleted' });
+        res.json({ error: 'User was deleted' });
     } catch (error) {
         res.status(500).json({ message: 'Delete user error', error: error.message });
     }
@@ -191,7 +191,7 @@ exports.checkUser = async (req, res, next) => {
 
     exports.logout = async (req, res) => {
         try {
-            res.json({ message: 'Successful logout' });
+            res.json({ error: 'Successful logout' });
         } catch (error) {
             res.status(500).json({ message: 'logout error', error: error.message });
         }
@@ -208,12 +208,12 @@ exports.checkUser = async (req, res, next) => {
             }
 
             if (!user) {
-                return res.status(404).json({message: 'User not found'});
+                return res.status(404).json({error: 'User not found'});
             }
 
             res.json({message: 'Recovery Request received'});
         } catch (error) {
-            res.status(500).json({message: 'Recovery error'});
+            res.status(500).json({error: 'Recovery error'});
         }
     };
 
@@ -221,7 +221,7 @@ exports.checkUser = async (req, res, next) => {
     exports.getAllUsers = async (req, res) => {
         try {
             if (req.user.role !== 'admin') {
-                return res.status(403).json({message: 'Not access rights'});
+                return res.status(403).json({error: 'Not access rights'});
             }
 
             const admins = await Admin.find();
@@ -240,7 +240,7 @@ exports.checkUser = async (req, res, next) => {
     exports.getAllStudents = async (req, res) => {
         try {
             if (req.user.role !== 'admin') {
-                return res.status(403).json({message: 'Not access rights'});
+                return res.status(403).json({error: 'Not access rights'});
             }
 
             const students = await Student.find();
@@ -257,7 +257,7 @@ exports.checkUser = async (req, res, next) => {
     exports.getAllAdmins = async (req, res) => {
         try {
             if (req.user.role !== 'admin') {
-                return res.status(403).json({message: 'Not access rights'});
+                return res.status(403).json({error: 'Not access rights'});
             }
 
             const admins = await Admin.find();
@@ -276,7 +276,7 @@ exports.checkUser = async (req, res, next) => {
             const {email} = req.body;
 
             if (!email) {
-                return res.status(400).json({message: 'Email does not exist'});
+                return res.status(400).json({error: 'Email does not exist'});
             }
 
             let user = await Admin.findByEmail(email);
@@ -284,7 +284,7 @@ exports.checkUser = async (req, res, next) => {
                 user = await Student.findByEmail(email);
             }
             if (!user) {
-                return res.status(404).json({message: 'User not found'});
+                return res.status(404).json({error: 'User not found'});
             }
 
             const {password, ...userData} = user.toObject();
