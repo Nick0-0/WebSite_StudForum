@@ -69,6 +69,15 @@ class Topic {
     }
 
     async delete() {
+        try {
+            await db.run('DELETE FROM Topics WHERE id = ?', [this.id]);
+            return true;
+        } catch (error) {
+            throw new Error('Delete topic error', {cause: error});
+        }
+    }
+
+    toObject() {
         return {
             id: this.id,
             name: this.name,
