@@ -14,7 +14,7 @@ exports.createPost = async (req, res) => {
         try {
             const {name} = req.body;
             const newTopic = new Topic({
-                name, typeOfUser: req.user.role,
+                name,
                 userId: req.user.id
             });
 
@@ -58,7 +58,7 @@ exports.updateTopic = async (req, res) => {
                 return res.status(404).json({error: 'Post not found'});
             }
 
-            if (topic.userId !== req.user.id && req.user.role !== 'admin') {
+            if (topic.userId !== req.user.id) {
                 return res.status(403).json({error: 'Not access rights to edit'});
             }
 
@@ -80,7 +80,7 @@ exports.deletePost = async (req, res) => {
                 return res.status(404).json({error: 'Topic not found'});
             }
 
-            if (topic.userId !== req.user.id && req.user.role !== 'admin') {
+            if (topic.userId !== req.user.id) {
                 return res.status(403).json({error: 'Not access rights to delete'});
             }
 
@@ -96,9 +96,8 @@ exports.createComment = async (req, res) => {
     await authenticate(req, res, async () => {
         try {
             const {description} = req.body;
-            const newComment = await Comment.create({
+            const newComment = new Comment({
                 topicId: req.params.topicId,
-                typeOfUser: req.user.role,
                 userId: req.user.id,
                 description
             });
@@ -129,7 +128,7 @@ exports.updateComment = async (req, res) => {
                 return res.status(404).json({error: 'Comment not found'});
             }
 
-            if (comment.userId !== req.user.id && req.user.role !== 'admin') {
+            if (comment.userId !== req.user.id) {
                 return res.status(403).json({error: 'Not access rights to delete'});
             }
 
@@ -151,7 +150,7 @@ exports.deleteComment = async (req, res) => {
                 return res.status(404).json({error: 'Comment not found'});
             }
 
-            if (comment.userId !== req.user.id && req.user.role !== 'admin') {
+            if (comment.userId !== req.user.id) {
                 return res.status(403).json({error: 'Not access rights to delete'});
             }
 
@@ -165,37 +164,22 @@ exports.deleteComment = async (req, res) => {
 
 exports.moderateTopic = async (req, res) => {
     await authenticate(req, res, () => {
-        if (req.user.role !== 'admin') {
-            return res.status(403).json({error: 'Not access rights to moderate'});
-        }
-
         try {
             const topic = await Topic.findById(req.params.id);
 
             if (!topic) {
                 return res.status(404).json({error: 'Post not found'});
             }
+
+            if (req.user.course) {
+                return res.status(403).json({error: 'Not access rights to moderate'});
+            }
             
-            const {typeOfUser} = req.body;
-            await topic.update({typeOfUser});
+            const {status} = req.body;
+            await topic.update({status});
+            res.status(200).json(topic.toObject());
         } catch (error) {
             res.status(500).json({error: 'Moderate Post error'});
         }
     });
-};
-
-exports.searchTopics = async (req, res) => {
-    try {
-        const {query} = req.body;
-        const topics = await Topic.findAll({
-            where: {
-                name: {
-                    [Op.like]: `%${query}%`
-                }
-            }
-        });
-        res.status(200).json(topics.map(topic => topic.toObject()));
-    } catch (error) {
-        res.status(500).json({error: 'Search topics error'});
-    }
 };
