@@ -5,7 +5,6 @@ class BaseUser {
         this.id = data.id;
         this.login = data.login;
         this.password = data.password;
-        this.role = data.role || 'user';
         this.email = data.email;
     }
 
@@ -98,11 +97,10 @@ class Student extends BaseUser {
 
     async update() {
         try {
-            // role = ? role = student
             await db.run(`
                 UPDATE Students SET
                     login = ?,
-                    
+                    password = ?,
                     email = ?,
                     first_name = ?,
                     last_name = ?,
@@ -114,7 +112,7 @@ class Student extends BaseUser {
                 WHERE id = ?
                 `, [
                     this.login,
-                    // this.role,
+                    this.password,
                     this.email,
                     this.firstName,
                     this.lastName,
@@ -234,11 +232,10 @@ class Admin extends BaseUser {
 
     async update() {
         try {
-            // role = ? role = student
             await db.run(`
                 UPDATE Students SET
                     login = ?,
-                    
+                    password = ?,
                     email = ?,
                     first_name = ?,
                     last_name = ?,
@@ -246,7 +243,7 @@ class Admin extends BaseUser {
                 WHERE id = ?
                 `, [
                     this.login,
-                    // this.role,
+                    this.password,
                     this.email,
                     this.firstName,
                     this.lastName,
@@ -272,15 +269,10 @@ class Admin extends BaseUser {
         return {
             id: this.id,
             login: this.login,
-            // role: this.role,
             email: this.email,
             firstName: this.firstName,
             lastName: this.lastName,
-            course: this.course,
-            faculty: this.faculty,
-            groupNumber: this.groupNumber,
-            photo: this.photo,
-            description: this.description
+            photo: this.photo
         };
     }
 }
