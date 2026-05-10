@@ -8,14 +8,15 @@ exports.register = async (req, res) => {
     try {
         //getting data from request
         const {
-            login, password, role, email
+            login, password, email
         } = req.body;
 
-       if (!['admin', 'student'].includes(role)) {
-        return res.status(400).json({error: 'Invalid role'});
+       let userModel;
+       if (req.body.course) {
+        userModel = Student;
+       } else {
+        userModel = Admin;
        }
-
-       let userModel = role === 'admin' ? Admin : Student;
 
         //checking of exist
         const existingUser = await userModel.findByLogin(login);
@@ -29,15 +30,14 @@ exports.register = async (req, res) => {
         const newUser = new userModel({
             login,
             password: hashedPassword,
-            role, email,
+            email,
             ...req.body
         });
         await newUser.create();
 
         //token generation
         const token = jwt.sign({
-            id: newUser.id,
-            role: newUser.role
+            id: newUser.id
         }, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
 
         res.status(201).json({
@@ -72,8 +72,7 @@ exports.login = async (req, res) => {
 
         //creating JWT token
         const token = jwt.sign({
-            id: user.id,
-            role: user.role
+            id: user.id
         }, process.env.JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
 
         //returning token and user's data
@@ -92,13 +91,13 @@ exports.getUser = async (req, res) => {
         const userId = req.params.id;
         let userModel;
 
-        if (req.user.role === 'admin') {
-            userModel = Admin;
-        } else {
+        if (req.user.course) {
             userModel = Student;
+        } else {
+            userModel = Admin;
         }
 
-        const user = await User.FindById(userId);
+        const user = await userModel.FindById(userId);
 
         if (!user) {
             return res.status(404).json({error: 'User not found'});
@@ -118,15 +117,15 @@ exports.updateUser = async (req, res) => {
         const updateData = req.body;
         
         //checking access rights
-        if (req.user.id !== userId && req.user.role !== 'admin') {
+        if (req.user.id !== userId) {
             return req.status(403).json({error: 'No access rights'});
         }
 
         let userModel;
-        if (req.user.role === 'admin') {
-            userModel = Admin;
-        } else {
+        if (req.user.course) {
             userModel = Student;
+        } else {
+            userModel = Admin;
         }
 
         //updating
@@ -142,7 +141,7 @@ exports.updateUser = async (req, res) => {
         }
 
         await user.update();
-        res.json({error: 'Successful data updated'});
+        res.json({message: 'Successful data updated'});
     } catch (error) {
         res.status(500).json({error: 'Update user error'});
     }
@@ -153,15 +152,15 @@ exports.deleteUser = async (req, res) => {
     try {
         const userId = req.params.id;
         
-        if (req.user.id !== userId && req.user.role !== 'admin') {
+        if (req.user.id !== userId) {
             return res.status(403).json({ error: 'Not access rights' });
         }
 
         let userModel;
-        if (req.user.role === 'admin') {
-            userModel = Admin;
-        } else {
+        if (req.user.course) {
             userModel = Student;
+        } else {
+            userModel = Admin;
         }
 
         const user = await userModel.findById(userId);
@@ -170,7 +169,7 @@ exports.deleteUser = async (req, res) => {
         }
 
         await user.delete();
-        res.json({ error: 'User was deleted' });
+        res.json({ message: 'User was deleted' });
     } catch (error) {
         res.status(500).json({ message: 'Delete user error', error: error.message });
     }
@@ -179,7 +178,14 @@ exports.deleteUser = async (req, res) => {
 exports.checkUser = async (req, res, next) => {
     const {id} = req.params;
     try {
-        const user = await User.getById(id);
+        let userModel;
+        if (req.user.course) {
+            userModel = Student;
+        } else {
+            userModel = Admin;
+        }
+
+        const user = await userModel.getById(id);
         if (!user) {
             return req.status(404).json({error: 'User not found'});
         }
@@ -188,109 +194,97 @@ exports.checkUser = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({error: 'Check user error'});
     }
+};
 
-    exports.logout = async (req, res) => {
-        try {
-            res.json({ error: 'Successful logout' });
-        } catch (error) {
-            res.status(500).json({ message: 'logout error', error: error.message });
+exports.logout = async (req, res) => {
+    try {
+        res.json({ message: 'Successful logout' });
+    } catch (error) {
+        res.status(500).json({ message: 'logout error', error: error.message });
+    }
+};
+
+//template for future recovery func
+exports.passwordRecovery = async (req, res) => {
+    try {
+        const {email} = req.body;
+        let user = await Admin.findByEmail(email);
+        if (!user) {
+            user = await Student.findByEmail(email);
         }
-    };
-
-    //template for future recovery func
-    exports.passwordRecovery = async (req, res) => {
-        try {
-            const {email} = req.body;
-
-            let user = await Admin.findByEmail(email);
-            if (!user) {
-                user = await Student.findByEmail(email);
-            }
-
-            if (!user) {
-                return res.status(404).json({error: 'User not found'});
-            }
-
-            res.json({message: 'Recovery Request received'});
-        } catch (error) {
-            res.status(500).json({error: 'Recovery error'});
+        if (!user) {
+            return res.status(404).json({error: 'User not found'});
         }
-    };
+        res.json({message: 'Recovery Request received'});
+    } catch (error) {
+        res.status(500).json({error: 'Recovery error'});
+    }
+};
 
-    //getting the all users list
-    exports.getAllUsers = async (req, res) => {
-        try {
-            if (req.user.role !== 'admin') {
-                return res.status(403).json({error: 'Not access rights'});
-            }
-
-            const admins = await Admin.find();
-            const students = await Student.find();
-
-            res.json({
-                admins: admins.map(admin => admin.toObject()),
-                students: students.map(student => student.toObject())
-            });
-        } catch (error) {
-            res.status(500).json({message: 'Get all users list error', error: error.message});
+//getting the all users list
+exports.getAllUsers = async (req, res) => {
+    try {
+        if (req.user.course) {
+            return res.status(403).json({error: 'Not access rights'});
         }
-    };
+        const admins = await Admin.find();
+        const students = await Student.find();
+        res.json({
+            admins: admins.map(admin => admin.toObject()),
+            students: students.map(student => student.toObject())
+        });
+    } catch (error) {
+        res.status(500).json({message: 'Get all users list error', error: error.message});
+    }
+};
 
-    //getting students list
-    exports.getAllStudents = async (req, res) => {
-        try {
-            if (req.user.role !== 'admin') {
-                return res.status(403).json({error: 'Not access rights'});
-            }
-
-            const students = await Student.find();
-
-            res.json({
-                students: students.map(student => student.toObject())
-            });
-        } catch (error) {
-            res.status(500).json({message: 'Get all students list error', error: error.message});
+//getting students list
+exports.getAllStudents = async (req, res) => {
+    try {
+        if (req.user.course) {
+            return res.status(403).json({error: 'Not access rights'});
         }
-    };
+        const students = await Student.find();
+        res.json({
+            students: students.map(student => student.toObject())
+        });
+    } catch (error) {
+        res.status(500).json({message: 'Get all students list error', error: error.message});
+    }
+};
 
-    //getting admins list
-    exports.getAllAdmins = async (req, res) => {
-        try {
-            if (req.user.role !== 'admin') {
-                return res.status(403).json({error: 'Not access rights'});
-            }
-
-            const admins = await Admin.find();
-
-            res.json({
-                admins: admins.map(admin => admin.toObject())
-            });
-        } catch (error) {
-            res.status(500).json({message: 'Get all admins list error', error: error.message});
+//getting admins list
+exports.getAllAdmins = async (req, res) => {
+    try {
+        if (req.user.course) {
+            return res.status(403).json({error: 'Not access rights'});
         }
-    };
+        const admins = await Admin.find();
+        res.json({
+            admins: admins.map(admin => admin.toObject())
+        });
+    } catch (error) {
+        res.status(500).json({message: 'Get all admins list error', error: error.message});
+    }
+};
 
-    //searching user by email
-    exports.findByEmail = async (req, res) => {
-        try {
-            const {email} = req.body;
-
-            if (!email) {
-                return res.status(400).json({error: 'Email does not exist'});
-            }
-
-            let user = await Admin.findByEmail(email);
-            if (!user) {
-                user = await Student.findByEmail(email);
-            }
-            if (!user) {
-                return res.status(404).json({error: 'User not found'});
-            }
-
-            const {password, ...userData} = user.toObject();
-            res.json(userData);
-        } catch (error) {
-            res.status(500).json({message: 'Find user by email error', error: error.message});
+//searching user by email
+exports.findByEmail = async (req, res) => {
+    try {
+        const {email} = req.body;
+        if (!email) {
+            return res.status(400).json({error: 'Email does not exist'});
         }
-    };
+        let user = await Admin.findByEmail(email);
+        if (!user) {
+            user = await Student.findByEmail(email);
+        }
+        if (!user) {
+            return res.status(404).json({error: 'User not found'});
+        }
+        const {password, ...userData} = user.toObject();
+        res.json(userData);
+    } catch (error) {
+        res.status(500).json({message: 'Find user by email error', error: error.message});
+    }
 };
