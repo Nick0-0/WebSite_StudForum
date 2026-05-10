@@ -1,0 +1,110 @@
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+}
+header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    height: auto;
+    position: fixed;
+    top: 0;
+}
+a.icon {
+    display: flex;
+    align-items: center;
+    color: #296a4a;
+    text-transform: uppercase;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+a.icon img {
+    height: 50px;
+    width: auto;
+    margin: 5px;
+    /* align-self:flex-end; */
+}
+/*!!!МОЖНО СДЕЛАТЬ КНОПКОЙ ИКОНКУ ДЛЯ ПЕРЕХОДА НА ГЛАВНУЮ!!!*/
+a.icon:hover {
+    color: #296a4a;
+    /* background: linear-gradient(to top, whitesmoke, beige); */
+}
+div.navigation-bar {
+    margin-left: 20px;
+    text-wrap-style: balance;
+    text-align: center;
+}
+main {
+    height: 500px;
+    flex: 1;
+}
+footer {
+    flex-shrink: 0;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #296a4a;
+}
+footer div {
+    display: flex;
+    align-items: center;
+}
+p.copyright {
+    text-transform: uppercase;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+footer a {
+    margin: 0 10px;
+}
+#social-network {
+    height: 60px;
+    width: auto;
+    /* margin: 10px; */
+}
+button {
+    margin: 5px 10px;
+    padding: 5px 10px;
+    background-color: whitesmoke;
+    /* border: gray thin solid; */
+    border: none;
+    border-radius: 50px;
+    height: 30px;
+    width: auto;
+    color: #296a4a;
+    font-weight: bold;
+    font-size: 10pt;
+}
+button.profile {
+    /* СДЕЛАТЬ КРУГЛОЙ */
+    font-size: 12pt;
+}
+button:hover {
+    background: linear-gradient(to bottom right, #296a4a, whitesmoke);
+    color:whitesmoke;
+}
+a:link {
+    /* font-weight: bold; */
+    text-align: center;
+    /* color: 	#4a296a; */
+    color: whitesmoke;
+    text-decoration: none;
+}
+a:hover {
+    /* text-align: center; */
+    /* font-weight: lighter; */
+    color:darkred;
+}
+a:visited {
+    color: whitesmoke;
+    text-decoration: none;
+}
