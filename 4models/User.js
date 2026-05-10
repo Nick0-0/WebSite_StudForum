@@ -1,4 +1,5 @@
 const {Database} = require('../db');
+const bcrypt = require('bcrypt');
 
 class BaseUser {
     constructor(data) {
@@ -180,11 +181,7 @@ class Admin extends BaseUser {
                     this.firstName,
                     this.lastName,
                     this.email,
-                    this.course,
-                    this.faculty,
-                    this.groupNumber,
-                    this.photo,
-                    this.description
+                    this.photo
                 ]);
                 this.id = result.lastID;
                 return this;
@@ -233,7 +230,7 @@ class Admin extends BaseUser {
     async update() {
         try {
             await db.run(`
-                UPDATE Students SET
+                UPDATE Admins SET
                     login = ?,
                     password = ?,
                     email = ?,

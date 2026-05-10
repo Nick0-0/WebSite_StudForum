@@ -97,7 +97,7 @@ exports.getUser = async (req, res) => {
             userModel = Admin;
         }
 
-        const user = await userModel.FindById(userId);
+        const user = await userModel.findById(userId);
 
         if (!user) {
             return res.status(404).json({error: 'User not found'});
@@ -129,7 +129,7 @@ exports.updateUser = async (req, res) => {
         }
 
         //updating
-        const user = await userModel.FindById(userId);
+        const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({error: 'User not found'});
         }
@@ -185,7 +185,7 @@ exports.checkUser = async (req, res, next) => {
             userModel = Admin;
         }
 
-        const user = await userModel.getById(id);
+        const user = await userModel.findById(id);
         if (!user) {
             return req.status(404).json({error: 'User not found'});
         }
