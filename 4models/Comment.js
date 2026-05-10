@@ -51,6 +51,15 @@ class Comment {
         }
     }
 
+    static async findByTpoicId(topicId) {
+        try {
+            const results = await db.query('SELECT * FROM Comments WHERE topic_id = ?', [topicId]);
+            return results.map(row => new Comment(row));
+        } catch (error) {
+            throw new Error('Get comments by topic id error', {cause: error});
+        }
+    }
+
     async update(updatedData) {
         try {
             await db.run(`
