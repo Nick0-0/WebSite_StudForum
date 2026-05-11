@@ -6,7 +6,7 @@ const forumController = require('../3controllers/forumController');
 
 //CRUD operations with Users
 router.get('/users', userController.getAllUsers);
-router.get('/users/:id', userController.getUserById);
+router.get('/users/:id', userController.getUser);
 router.put('/users/:id', userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
 
@@ -19,15 +19,15 @@ router.delete('/documents/:id', documentController.deleteDocument);
 
 //CRUD operations with events
 router.get('/events', calendarController.getAllEvents);
-router.post('/events', calendarController.createCalendarEvent);
-router.get('/events/:id', calendarController.getCalendarEventById);
-router.put('/events/:id', calendarController.updateCalendarEvent);
-router.delete('/events/:id', calendarController.deleteCalendarEvent);
+router.post('/events', calendarController.createEvent);
+router.get('/events/:id', calendarController.getEventById);
+router.put('/events/:id', calendarController.updateEvent);
+router.delete('/events/:id', calendarController.deleteEvent);
 
 //CRUD operations with forum
-router.get('/topics', forumController.getTopics);
-router.post('/topics', forumController.createTopic);
-router.get('/comments', forumController.getComments);
+router.get('/topics', forumController.getAllTopics);
+router.post('/topics', forumController.createPost);
+router.get('/comments', forumController.getCommentsByTopic);
 router.post('/comments', forumController.createComment);
 
 

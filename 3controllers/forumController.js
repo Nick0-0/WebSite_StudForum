@@ -120,7 +120,7 @@ exports.getCommentsByTopic = async (req, res) => {
 };
 
 exports.updateComment = async (req, res) => {
-    await authenticate(req, res, () => {
+    await authenticate(req, res, async () => {
         try {
             const comment = await Comment.findById(req.params.id);
 
@@ -163,7 +163,7 @@ exports.deleteComment = async (req, res) => {
 };
 
 exports.moderateTopic = async (req, res) => {
-    await authenticate(req, res, () => {
+    await authenticate(req, res, async () => {
         try {
             const topic = await Topic.findById(req.params.id);
 

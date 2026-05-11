@@ -45,27 +45,44 @@ app.use((req, res) => {
     res.status(404).send("Page not found");
 });
 
+console.log('APP Initialization');
+
 //connecting to DB
-db.connect() //connecting to DB
-    .then(() => {
-        //server start
-        app.listen(port, () => {
-            console.log(`Server started on port ${port}`);
-        });
-    })
-    .catch((error) => { //in the error case
-        console.log('Error of connect to the DB: ', error);
-        process.exit(1); //ending the process with an error code
+//connecting to DB
+db.connect((err) => {
+    if (err) {
+        console.error('Connect to the DB error', err.message);
+        process.exit(1)
+    }
+
+    console.log('Correct db connecting');
+    //     //server start
+    app.listen(port, () => {
+        console.log(`Server started on port ${port}`);
     });
 
-
-//in the shutdown case
-process.on('SIGINT', async () => {
-    try {
-        await db.close();
-        process.exit(0);
-    } catch (error) {
-        console.error('Error closing DB connection:', error);
-        process.exit(1);
-    }
-});
+    //in shutdown case
+    ['SIGINT', 'SIGTERM', 'SIGQUIT'].forEach(signal => {
+        process.on(signal, (sig) => {
+            console.log(`Shutdown signal has got: ${sig}`);
+            db.close((err) => {
+                if (err) {
+                    console.error('Close DB error:', err.message);
+                }
+                console.log('DB closed');
+                process.exit(0);
+            });
+        });
+    });
+}); 
+    // .then(() => {
+    //     console.log('Correct db connecting');
+    //     //server start
+    //     app.listen(port, () => {
+    //         console.log(`Server started on port ${port}`);
+    //     });
+    // })
+    // .catch((error) => { //in the error case
+    //     console.log('Error of connect to the DB: ', error);
+    //     process.exit(1); //ending the process with an error code
+    // });

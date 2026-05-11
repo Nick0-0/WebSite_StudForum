@@ -83,14 +83,29 @@ button {
     color: #296a4a;
     font-weight: bold;
     font-size: 10pt;
+    transition: all 0.5s ease;
 }
 button.profile {
     /* СДЕЛАТЬ КРУГЛОЙ */
     font-size: 12pt;
+    height: 40px;
+    width: 70px;
 }
 button:hover {
     background: linear-gradient(to bottom right, #296a4a, whitesmoke);
     color:whitesmoke;
+    box-shadow: 1px 1px 20px #296a4a;
+    transform: scale(1.05);
+}
+button:not(:hover) {
+    transition-delay: 50ms;
+}
+button:active {
+    background: linear-gradient(to top right, #4eba85, whitesmoke);
+    /* background: #4eba85; */
+    color:white;
+    box-shadow: 1px 1px 20px #4eba85;
+    transform: scale(1.05);
 }
 a:link {
     /* font-weight: bold; */

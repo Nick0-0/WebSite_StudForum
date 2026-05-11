@@ -1,100 +1,93 @@
-const sqlite3 = require('sqlite3').verbose(); //Connecting the SQLite library with detailed logging
-const path = require('path'); //module for working with file routes
-const {DB_PATH = "DataBase.db"} = process.env; //using the enviroment vars
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const {DB_PATH = "DataBase.db"} = process.env;
 
-// Connect to DB Function
-const connectToDataBase = () => {
-    return new Promise((resolve, reject) => { //returning the promise to async working
-        const db = new sqlite3.Database(path.join(__dirname, DB_PATH), //creating a secure path to BD file
-            {
-                readonly: false,
-                extendedResultTypes: true
-            },
-        
-            (err) => {
-                if (err) {
-                    console.error('Failed to connect to the DataBase:', err.message); //error logging
-                    return reject(err); //rejection of promise in error case
-                }
-                console.log('Sucessful connect to the DataBase'); //infoming about sucessful connect
-                resolve(db); //resolution of promise with connecting object
+let dbInstance = null;
+
+console.log('Start of connect');
+
+function connectToDataBase(callback) {
+    console.log('Start connecting to database');
+
+    const db = new sqlite3.Database(
+        path.join(__dirname, DB_PATH),
+        {
+            readonly: false
+        },
+        (err) => {
+            if (err) {
+                console.error('Connect to the DB error:', err.message);
+                return callback(err);
             }
-        );
-    });
-};
+            console.log('Successful connect to the DB');
+            dbInstance = db;
+            callback(null, db);
+        }
+    );
+}
 
-//export object with methods
 module.exports = {
-    async connect() { //async connection method
-        try {
-            this.db = await connectToDataBase(); //waiting of connection
-            return this.db; //returning connected object
-        } catch (error) {
-            throw new Error('Failed to connect to the DB', error); //creating error in error case
+    connect(callback) {
+        if (dbInstance) {
+            return callback(null, dbInstance);
         }
+        connectToDatabase(callback);
     },
-    async close() { //closing connect method
-        if (this.db) {
-            return new Promise((resolve, reject) => {
-                this.db.close((err) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    console.log('DB closed');
-                    resolve();
-                });
-            });
-        }
-    },
-    async query(sql, params = []) {
-        try {
-            const results = await new Promise((resolve, reject) => {
-                this.db.all(sql, params, (err, rows) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(rows);
-                });
-            });
-            return results;
-        }
-        catch (error) {
-            throw new Error('Request process error', {cause: error});
-        }
-    },
-    async run(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.run(sql, params, function(err) {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(this.lastID);
-            });
+    
+    close(callback) {
+        if (!dbInstance) return callback(new Error('DB not connected'));
+        
+        dbInstance.close((err) => {
+            if (err) {
+                return callback(err);
+            }
+            console.log('DB closed');
+            dbInstance = null;
+            callback(null);
         });
     },
-    async each(sql, params = [], callback) {
-        return new Promise((resolve, reject) => {
-            this.db.each(sql, params, (err, row) => {
-                if (err) {
-                    return reject(err);
-                }
-                callback(row);
-            }, err => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve();
-            });
+    
+    query(sql, params, callback) {
+        if (!dbInstance) return callback(new Error('DB not connected'));
+        
+        dbInstance.all(sql, params, (err, rows) => {
+            if (err) {
+                return callback(new Error('Request execution error: ' + err.message));
+            }
+            callback(null, rows);
         });
-    }, 
-    async prepare(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.prepare(sql, params, (err, stmt) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(stmt);
-            });
+    },
+    
+    run(sql, params, callback) {
+        if (!dbInstance) return callback(new Error('DB not connected'));
+        
+        dbInstance.run(sql, params, (err) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, dbInstance.lastID);
+        });
+    },
+    
+    each(sql, params, callback, resultCallback) {
+        if (!dbInstance) return callback(new Error('DB not connected'));
+        
+        dbInstance.each(sql, params, (err, row) => {
+            if (err) {
+                return callback(err);
+            }
+            resultCallback(row);
+        }, callback);
+    },
+    
+    prepare(sql, params, callback) {
+        if (!dbInstance) return callback(new Error('DB not connected'));
+        
+        dbInstance.prepare(sql, params, (err, stmt) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, stmt);
         });
     }
 };

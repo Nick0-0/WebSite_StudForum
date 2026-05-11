@@ -89,4 +89,4 @@ class Event {
     }
 }
 
-modules.exports = Event;
+module.exports = Event;
