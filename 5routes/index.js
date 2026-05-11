@@ -38,7 +38,7 @@ router.use ((req, res, next) => {
 
 //final error handler
 router.use ((error, req, res, next) => {
-    res.status(error.statuc || 500);
+    res.status(error.status || 500);
     res.json({error: {message: error.message}});
 });
 
