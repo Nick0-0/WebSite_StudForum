@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>StudForum</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/1public/styles/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="descrition" content="Сайт студенческого форума - демонстрация полученных навыков веб-верстки в ходе обучения.">
+    <link rel="icon" href="./media/favicon.svg" type="image/svg+html">
+    <link rel="stylesheet" href="styles/index-style.css" type="text/css">
+    <title>StudForum</title>
 </head>
 <body>
     <header>
-        <!--Site Head-->
+        <a class="icon">
+            <img src="./media/favicon.svg" alt="icon.png">
+            <p>студфорум</p>
+        </a>
+        <div class="navigation-bar">
+            <a class="nav-link">Главная</a>
+            <a class="nav-link">Форум</a>
+            <a class="nav-link">Документы</a>
+            <a class="nav-link">Календарь</a>
+        </div>
+        <div class="auth-zone">
+            <% if (user) { %>
+                <a href="/profile" class="profile-btn">Профиль</a>
+            <% } else { %>
+                <a href="/auth" class="profile-btn">Вход</a>
+            <% } %>
+        </div>
     </header>
-    <main>
-        <%- yield %>
+
+    <main id="main">
+        <%- body %>
     </main>
+
     <footer>
-        <script src="/1public/JS-scripts/main.js"></script>
+        <div class="footer-info">
+            <p class="copyright">&copy;studforum 2026</p>
+            <a title="+7-(000)-000-00-00" href="tel:+70000000000">наш телефон</a>
+            <a title="studfor-hotline@nomail.qwerty" href="mailto:studfor-hotline@nomail.qwerty">наша почта</a>
+        </div>
+        <div class="footer-social">
+            <!-- <a><img name="social network" alt="social network"></a> -->
+            <a title="our telegram" href="https://t.me/Chtotihocheshotmenya_yoKlmNo">
+                <img class="social-icon" alt="telegram" src="/media/telegram.png">
+            </a>
+            <a title="our vkontakte" href="https://vk.com/pechka_nedorogo">
+                <img class="social-icon" alt="vkontakte" src="/media/vkontakte.png">
+            </a>
+        </div>
     </footer>
+
+    <script src="/1public/JS-scripts/main.js"></script>
 </body>
 </html>
