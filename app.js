@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const expressLayouts = require('express-ejs-layouts');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
@@ -10,7 +11,9 @@ const app = express();
 
 //setting of templates
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '2views'));
+app.use(expressLayouts);
+app.set('layout', 'layout');
 
 //--Middleware--
 app.use(express.static(path.join(__dirname, '1public')));
@@ -28,7 +31,7 @@ app.use(session({
 
 //transmitting session data
 app.use((req, res, next) => {
-    if (res.session) {
+    if (req.session) {
         res.locals.user = req.session.userId || null;
         res.locals.role = req.session.role || null;
     } else {
