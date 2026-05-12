@@ -53,6 +53,18 @@ const calendarController = {
         }
     },
 
+    //helper func
+    getPendingEventsJSON: async (req, res) => {
+        if (req.session.role !== 'admin') return 
+        res.status(403).json({error: 'Not access rights'});
+        try {
+            const pending = await Event.getPending();
+            res.json(pending);
+        } catch (error) {
+            res.status(500).json({error: 'API error'});
+        }
+    },
+
     //publication events by admin
     approveEvent: async (req, res) => {
         if (req.session.role !== 'admin') return res.status(403).send('Not access rights');
