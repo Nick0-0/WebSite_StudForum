@@ -1,5 +1,41 @@
-<form action="/register" method="post">
-    <input type="text" name="username" placeholder="Имя пользователя">
-    <input type="password" name="password" placeholder="Пароль">
-    <button type="submit">Зарегистрироваться</button>
-</form>
+<link rel="stylesheet" href="styles/auth-style.css" type="text/css">
+
+<a href="/" class="back-btn">Вернуться на главную</a>
+
+<div class="auth-container">
+    <section class="auth-box">
+        <h2>Регистрация студента</h2>
+        <form action="/auth/register" method="POST" class="auth-form">
+            <input type="text" name="login" placeholder="Login to 16 symbols" maxlength="16" required>
+            <div class="name-group">
+                <input type="text" name="first_name" placeholder="First name" maxlength="32" required>
+                <input type="text" name="second_name" placeholder="Second name" maxlength="32" required>
+            </div>
+            <input type="email" name="email" placeholder="Email" maxlength="64" required>
+            <input type="tel" name="phone_number" placeholder="+7 (000) 000-00-00" required>
+
+            <div class="study-group">
+                <input type="number" name="course" placeholder="Course (1-5)" min="1" max="5" required>
+                <input type="text" name="faculty" placeholder="Faculty" maxlength="64" required>
+            </div>
+            <input type="text" name="group_number" placeholder="Group number" maxlength="32" required>
+            <input type="password" name="password" placeholder="Password" maxlength="32" required>
+
+            <button type="submit" class="btn-submit">Зарегестрироваться</button>
+        </form>
+    </section>
+
+    <section class="auth-box">
+        <h2>Авторизация</h2>
+        <form action="/auth/register" method="POST" class="auth-form">
+            <input type="text" name="login" placeholder="Login" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <p class="error-text"><%= error %></p>
+            <% } %>
+
+            <button type="submit" class="btn-submit">Войти</button>
+        </form>
+    </section>
+</div>

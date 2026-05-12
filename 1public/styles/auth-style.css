@@ -1,0 +1,96 @@
+a.back-btn {
+    /* display: inline-flex; */
+    width: fit-content;
+    padding: 5px;
+    background-color: whitesmoke;
+    border-radius: 50px;
+    color: #296a4a !important;
+    font-weight: bold;
+    font-size: 10pt;
+    font-family: sans-serif;
+    transition: all 0.5s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+a.back-btn:hover {
+    transform: translateY(-5px);
+    color: darkred !important;
+}
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    padding: 100px 5%;
+    flex-wrap: wrap;
+    background-color: whitesmoke;
+}
+.auth-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 320px;
+    max-width: 450px;
+    border: 1px solid #e0e0e0;
+}
+.auth-box h2 {
+    color: #296a4a;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.auth-form input {
+    height: 45px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 50px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
+.auth-form input:focus {
+    box-shadow: 0 0 0 2px #296a4a;
+}
+.name-group, .study-group {
+    display: flex;
+    gap: 15px;
+}
+.name-group input, .study-group input {
+    width: 50%;
+}
+.btn-submit {
+    margin-top: 15px;
+    height: 50px;
+    border: none;
+    border-radius: 50px;
+    background-color: #296a4a;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(to bottom right, #296a4a, #4eba85);
+    transform: scale(1.03);
+    box-shadow: 1px 1px 20px rgba(41, 106, 74, 0.4);
+}
+.error-text {
+    color: #d9534f;
+    text-align: center;
+    font-size: 14px;
+    margin: -10px 0 10px 0;
+}
