@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 //--Middleware--
-app.use(express.static(path.join(__dirname, '1oulic')));
+app.use(express.static(path.join(__dirname, '1public')));
 app.use(bodyParser.urlencoded({extended: true, limit: '2gb'}));
 app.use(bodyParser.json({limit: '2gb'}));
 app.use(session({
