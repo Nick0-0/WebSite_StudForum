@@ -16,23 +16,36 @@
             <div class="day-name">Пт</div>
             <div class="day-name">Сб</div>
             <div class="day-name">Вс</div>
+            
+            <!-- creating empty cells for the offset -->
+            <!-- <% const startOffset = 4; %> -->
+            
+            <% for(let i = 1; i <= 31; i++) { %>
+                <% 
+                const dayEvents = events.filter(e => e.start_date.startsWith(i < 10 ? '0'+i : i));
+                %>
+                <div class="calendar-day <%= dayEvents.length > 0 ? 'has-event' : '' %>">
+                    <span class="day-number"><%= i %></span>
+                    <% if (dayEvents.length > 0) { %>
+                        <div class="event-dot" title="<%= dayEvents[0].name %>"></div>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
-
-        <% for(let i = 1; i <= 31; i++) { %>
-            <% 
-               const dayEvents = events.filter(e => e.start_date.startsWith(i < 10 ? '0'+i : i));
-            %>
-            <div class="calendar-day <%= dayEvents.length > 0 ? 'has-event' : '' %>">
-                <span class="day-number"><%= i %></span>
-                <% if (dayEvents.length > 0) { %>
-                    <div class="event-dot" title="<%= dayEvents[0].name %>"></div>
-                <% } %>
-            </div>
-        <% } %>
     </div>
+    
+    <aside class="calendar-sidebar">
+        <div class="info-card">
+            <h3>Университетские события</h3>
+            <p>Следите за актуальными мероприятиями нашего вуза</p>
+            <button class="btn-suggest" onclick="document.getElementById('suggest-modal').style.display='flex'">
+                Предложить событие
+            </button>
+        </div>
+    </aside>
 </div>
 
-<aside class="calendar-sidebar">
+<div id="suggest-modal" class="modal">
     <div class="modal-content">
         <h3>Предложить событие</h3>
         <form action="/calendar/suggest" method="POST">
@@ -46,4 +59,4 @@
             </div>
         </form>
     </div>
-</aside>
+</div>
