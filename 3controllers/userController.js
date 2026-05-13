@@ -4,7 +4,14 @@ const bcrypt = require('bcrypt');
 const userController = {
     //displaying the login/registration page
     renderAuth: (req, res) => {
-        res.render('auth', {error: null});
+        let errorMsg = null;
+
+        if (req.query.error === 'register_error') errorMsg = 'Register error';
+        if (req.query.error === 'invalid_credentials') errorMsg = 'Invalid login or password';
+        if (req.query.error === 'session_error') errorMsg = 'Create session error';
+        if (req.query.error === 'server_error') errorMsg = 'Server error';
+
+        res.render('auth', {error: errorMsg});
     }, 
 
     //student registration processing
@@ -14,9 +21,16 @@ const userController = {
 
             req.session.userId = userId.id;
             req.session.role = 'student';
-            res.redirect('/profile');
+
+            req.session.save((err) => {
+                if (err) {
+                    console.error(err);
+                    return res.redirect('/auth?error=session_error');
+                } 
+                res.redirect('/profile');
+            });
         } catch (error) {
-            res.render('auth', {error: 'Register error'});
+            res.redirect('/auth?error=register_error');
         }
     },
 
@@ -31,12 +45,14 @@ const userController = {
                 if (isMatch) {
                     req.session.userId = user.id;
                     req.session.role = user.role;
-                    return res.redirect('/profile');
+                    return req.session.save(() => {
+                        res.redirect('/profile');
+                    });
                 }
             }
-            res.render('auth', {error: 'Invalid login or password'});
+            res.redirect('/auth?error=invalid_credentials');
         } catch (error) {
-            res.status(500).send('Server error');
+            res.redirect('/auth?error=server_error');
         }
     },
 

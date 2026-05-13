@@ -1,11 +1,49 @@
-<h2>Календарь событий</h2>
-<div id="events">
-    <% if (events) { %>
-        <% events.forEach(event => { %>
-            <div class="event">
-                <h3><%= event.title %></h3>
-                <p><%= event.date %></p>
+<link rel="stylesheet" href="styles/calendar-style.css" type="text/css">
+
+<a href="/" class="back-btn">Вернуться на главную</a>
+
+<div class="calendar-container">
+    <div class="calendar-main">
+        <div class="calendar-header">
+            <h2>Название месяца</h2>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="day-name">Пн</div>
+            <div class="day-name">Вт</div>
+            <div class="day-name">Ср</div>
+            <div class="day-name">Чт</div>
+            <div class="day-name">Пт</div>
+            <div class="day-name">Сб</div>
+            <div class="day-name">Вс</div>
+        </div>
+
+        <% for(let i = 1; i <= 31; i++) { %>
+            <% 
+               const dayEvents = events.filter(e => e.start_date.startsWith(i < 10 ? '0'+i : i));
+            %>
+            <div class="calendar-day <%= dayEvents.length > 0 ? 'has-event' : '' %>">
+                <span class="day-number"><%= i %></span>
+                <% if (dayEvents.length > 0) { %>
+                    <div class="event-dot" title="<%= dayEvents[0].name %>"></div>
+                <% } %>
             </div>
-        <% }) %>
-    <% } %>
+        <% } %>
+    </div>
 </div>
+
+<aside class="calendar-sidebar">
+    <div class="modal-content">
+        <h3>Предложить событие</h3>
+        <form action="/calendar/suggest" method="POST">
+            <input type="text" name="name" placeholder="Event name" required>
+            <input type="text" name="start_date" placeholder="Start date (DD.MM.YYYY HH:MM)" required>
+            <input type="text" name="end_date" placeholder="End date" required>
+            <textarea name="descrition" placeholder="Event descrition"></textarea>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit">Submit</button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('suggest-modal').style.display='none'">Cancel</button>
+            </div>
+        </form>
+    </div>
+</aside>

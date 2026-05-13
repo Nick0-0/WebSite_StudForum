@@ -29,7 +29,7 @@ class User {
         `;
         return new Promise((resolve, reject) => {
             db.run(sql, [login, first_name, last_name, email, phone_number,
-             course, faculty, group_number, password], function(err) {
+             course, faculty, group_number, hashedPassword], function(err) {
                 if (err) return reject(err);
                 resolve({id: this.lastID});
              });

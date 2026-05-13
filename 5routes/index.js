@@ -23,7 +23,7 @@ router.post('/forum/topic', isAuth, forumController.createTopic);
 
 //documents page
 router.get('/document', isAuth, documentController.renderDocuments);
-router.post('/doucment/upload', isAuth, documentController.uploadDocument);
+router.post('/document/upload', isAuth, documentController.uploadDocument);
 router.get('/document/download/:id', isAuth, documentController.downloadDocument);
 
 //calendar

@@ -1,0 +1,128 @@
+a.back-btn {
+    /* display: inline-flex; */
+    width: fit-content;
+    padding: 5px;
+    background-color: whitesmoke;
+    border-radius: 50px;
+    color: #296a4a !important;
+    font-weight: bold;
+    font-size: 10pt;
+    font-family: sans-serif;
+    transition: all 0.5s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+a.back-btn:hover {
+    transform: translateY(-5px);
+    color: darkred !important;
+}
+.calendar-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.calendar-main {
+    flex: 3;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.calendar-header h2 {
+    color: #296a4a;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+.day-name {
+    text-align: center;
+    font-weight: bold;
+    color: #296a4a;
+    padding-bottom: 10px;
+}
+.calendar-day {
+    aspect-ratio: 1 / 1;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.calendar-day:hover {
+    background-color: #e8f5e9;
+    transform: translateY(-2px);
+}
+.calendar-day.has-event {
+    background-color: #4eba85;
+    color: white;
+}
+.day-number {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.event-dot {
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+.calendar-sidebar {
+    flex: 1;
+}
+.info-card {
+    background: #296a4a;
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+}
+.btn-suggest {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: white;
+    color: #296a4a;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-suggest:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+}
+.modal-content input, .modal-content textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
