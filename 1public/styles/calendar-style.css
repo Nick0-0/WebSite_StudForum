@@ -121,11 +121,12 @@ a.back-btn:hover {
 }
 .modal-content input, .modal-content textarea {
     width: 100%;
-    max-width: 100%;
+    /* max-width: 100%; */
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    resize: vertical;
 }
 .modal-buttons {
     display: flex;
