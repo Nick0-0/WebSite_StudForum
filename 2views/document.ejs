@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="styles/document-style.css" type="text/css">
+
+<div class="doc-action-page">
+    <div class="docs-action-bar">
+        <div class="search-box">
+            <input type="text" id="doc-search" placeholder="Поиск документов" oninput="filterDocuments()">
+        </div>
+
+        <% if (role === 'student') { %>
+            <button class="btn-upload-trigger" onclick="document.getElementById('upload-modal').style.display='flex'">
+                Добавить собственный файл
+            </button>
+        <% } %>
+    </div>
+
+    <main class="documents-grid" id="docs-grid">
+        <% if (documents && documents.length > 0) { %>
+            <% documents.forEach(doc => { %>
+                <a href="/document/download/<%= doc.id %>" class="doc-card" data-title="<%= doc.first_name %> <%= doc.last_name %>">
+                    <div class="doc-icon-wrapper">
+                        <img src="/media/file-icon.png" alt="File" class="doc-icon">
+                    </div>
+                    <div class="doc-info">
+                        <span class="doc-name">Документ #<%= doc.id %></span>
+                        <p class="doc-author">Автор: <%= doc.first_name %> <%= doc.last_name %></p>
+                    </div>
+                </a>
+            <% }) %>
+        <% } else { %>
+            <p class="empty-text">Документов пока нет. Станьте первым, кто загрузит учебные материалы!</p>
+        <% } %>
+    </main>
+</div>
+
+<div id="upload-modal" class="modal">
+    <div class="modal-content">
+        <h3>Загрузка учебного материала</h3>
+        <form action="/document/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            
+            <div class="file-drop-zone">
+                <input type="file" name="doc" id="file-input" required>
+                <label for="file-input">Нажмите для выбора файла (до 2 ГБ)</label>
+            </div>
+
+            <div class="select-field">
+                <label for="doc-type">Приватность:</label>
+                <select name="type_of_document" id="doc-type" required>
+                    <option value="public">Публичный (виден всем во вкладке)</option>
+                    <option value="private">Приватный (виден только мне в профиле)</option>
+                </select>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit">Загрузить</button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('upload-modal').style.display='none'">
+                    Отмена
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function filterDocuments() {
+        const query = document.getElementById('doc-search').value.toLowerCase();
+        const cards = document.querySelectorAll('.doc-card');
+
+        cards.forEach(card => {
+            const author = card.getAttribute('data-title').toLowerCase();
+            const docId = card.querySelector('.doc-name').textContent.toLowerCase();
+
+            if (author.includes(query) || docId.includes(query)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>

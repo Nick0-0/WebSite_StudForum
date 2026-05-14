@@ -13,6 +13,10 @@ function isAuth(req, res, next) {
     }
     res.redirect('/auth');
 }
+const uploadDisk = multer({
+    dest: 'uploads/',
+    limits: {fileSize: 2 * 1024 * 1024 * 1024}
+});
 
 //main page
 router.get('/', (req, res) => {
@@ -25,7 +29,7 @@ router.post('/forum/topic', isAuth, forumController.createTopic);
 
 //documents page
 router.get('/document', isAuth, documentController.renderDocuments);
-router.post('/document/upload', isAuth, documentController.uploadDocument);
+router.post('/document/upload', isAuth, uploadDisk.single('doc'), documentController.uploadDocument);
 router.get('/document/download/:id', isAuth, documentController.downloadDocument);
 
 //calendar

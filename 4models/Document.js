@@ -1,4 +1,3 @@
-const { resolveInclude } = require('ejs');
 const db = require('../db');
 
 class Document {
@@ -23,7 +22,7 @@ class Document {
     }
 
     static async getById(id) {
-        return new ProcessingInstruction,ise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             db.get('SELECT * FROM Documents WHERE id = ?', [id], (err, row) => {
                 if (err) return reject(err);
                 resolve(row);
