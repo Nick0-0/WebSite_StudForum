@@ -14,10 +14,7 @@ const forumController = {
                 topics = await Topic.getAll();
             }
 
-            res.render('forum', {
-                topics, user: req.session.user,
-                role: req.session.role
-            });
+            res.render('forum', {topics});
         } catch (error) {
             res.status(500).send('Loading forum error');
         }

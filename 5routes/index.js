@@ -20,7 +20,7 @@ const uploadDisk = multer({
 
 //main page
 router.get('/', (req, res) => {
-    res.render('index', {user: req.session.user, role: req.session.role});
+    res.render('index');
 });
 
 //forum page

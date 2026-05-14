@@ -14,9 +14,7 @@ const calendarController = {
             }
 
             res.render('calendar', {
-                events, 
-                role: req.session.role,
-                user: req.session.user,
+                events,
                 currentMonth: monthFilter || 'All time'
             });
         } catch (error) {

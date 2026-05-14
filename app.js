@@ -32,8 +32,8 @@ app.use(session({
 //transmitting session data
 app.use((req, res, next) => {
     if (req.session) {
-        res.locals.user = req.session.userId || null;
-        res.locals.role = req.session.role || null;
+        res.locals.user = req.session.userId;
+        res.locals.role = req.session.role;
     } else {
         res.locals.user = null;
         res.locals.role = null;
