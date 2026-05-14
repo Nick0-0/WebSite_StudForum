@@ -64,8 +64,7 @@ const userController = {
             if (!user) return res.redirect('/auth');
 
             res.render('profile', {
-                user, role: req.session.role,
-                layout: 'layout'
+                user: user, role: req.session.role
             });
         } catch (error) {
             res.redirect('/auth');
@@ -75,9 +74,8 @@ const userController = {
     //update of profile (saving the settings)
     updateProfile: async (req, res) => {
         try {
-            const updateData = {
+            const rawData = {
                 description: req.body.description,
-                photo: req.body.photo,
                 group_number: req.body.group_number,
                 faculty: req.body.faculty,
                 course: req.body.course,
@@ -87,9 +85,25 @@ const userController = {
                 first_name: req.body.first_name
             };
 
+            const updateData = {};
+            Object.keys(rawData).forEach(key => {
+                if (rawData[key] !== undefined && rawData[key] !== '') {
+                    updateData[key] = rawData[key];
+                }
+            });
+            
+            if (req.file) {
+                updateData.photo = req.file.buffer;
+            }
+
+            if (Object.keys(updateData).length === 0) {
+                return res.redirect('/profile');
+            }
+
             await User.updateProfile(req.session.userId, req.session.role, updateData);
             res.redirect('/profile');
         } catch (error) {
+            console.error("Update profile error: ", error);
             res.status(500).send('Update profile error');
         }
     },

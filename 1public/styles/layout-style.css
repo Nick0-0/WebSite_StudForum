@@ -63,12 +63,12 @@ nav.navigation-bar {
     font-size: 12pt;
     height: 40px;
     min-width: 80px;
-    margin-right: 30px;
+    margin: 0 30px;
 }
 .nav-link:hover, .profile-btn:hover {
     background: linear-gradient(to bottom right, #296a4a, whitesmoke);
     color: whitesmoke !important;
-    box-shadow: 1px 1px 20px #296a4a;
+    box-shadow: 1px 1px 15px #296a4a;
     transform: scale(1.05);
     transition-delay: 0s;
 }
@@ -78,7 +78,7 @@ nav.navigation-bar {
 .nav-link:active, .profile-btn:active {
     background: linear-gradient(to top right, #4eba85, whitesmoke);
     color: whitesmoke !important;
-    box-shadow: 1px 1px 20px #4eba85;
+    box-shadow: 1px 1px 15px #4eba85;
     transform: scale(0.98);
 }
 

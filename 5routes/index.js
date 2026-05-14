@@ -4,6 +4,8 @@ const forumController = require('../3controllers/forumController');
 const documentController = require('../3controllers/documentController');
 const calendarController = require('../3controllers/calendarController');
 const userController = require('../3controllers/userController');
+const multer = require('multer');
+const upload = multer();
 
 function isAuth(req, res, next) {
     if (req.session.userId) {
@@ -32,6 +34,6 @@ router.post('/calendar/suggest', isAuth, calendarController.suggestEvent);
 
 //profile
 router.get('/profile', isAuth, userController.getProfile);
-router.post('/profile/update', isAuth, userController.updateProfile);
+router.post('/profile/update', isAuth, upload.single('photo'), userController.updateProfile);
 
 module.exports = router;
