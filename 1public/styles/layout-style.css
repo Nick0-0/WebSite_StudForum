@@ -127,3 +127,9 @@ footer a, a:link, a:visited {
 footer a:hover {
     color: darkred;
 }
+.navigation-bar .nav-link.active {
+    background-color: #296a4a !important;
+    color: whitesmoke !important;
+    box-shadow: 0 4px 10px rgba(41, 106, 74, 0.2);
+    pointer-events: none
+}
