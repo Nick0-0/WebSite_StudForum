@@ -75,10 +75,13 @@
                         <label>Телефон</label>
                         <input type="tel" name="phone_number" value="<%= user.phone_number %>" placeholder="+7 (ЦЦЦ) ЦЦЦ-ЦЦ-ЦЦ" required>
                     </div>
-                    <div class="input-field">
-                        <label>Описание профиля (до 512 символов)</label>
-                        <textarea name="description" maxlength="512" rows="4" placeholder="Обо мне..."><%= user.description %></textarea>
-                    </div>
+
+                    <% if (role === 'student') { %>
+                        <div class="input-field">
+                            <label>Описание профиля (до 512 символов)</label>
+                            <textarea name="description" maxlength="512" rows="4" placeholder="Обо мне..."><%= user.description %></textarea>
+                        </div>
+                    <% } %>
                 </div>
 
                 <button type="submit" class="btn-save">Сохранить</button>

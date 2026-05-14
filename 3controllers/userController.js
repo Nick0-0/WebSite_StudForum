@@ -41,7 +41,16 @@ const userController = {
             const user = await User.findByLogin(login);
 
             if (user) {
-                const isMatch = await bcrypt.compare(password, user.password);
+                //old version without admin login ->|
+                // const isMatch = await bcrypt.compare(password, user.password);
+                let isMatch = false;
+
+                if (user.role === 'admin') {
+                    isMatch = (password === user.password);
+                } else {
+                    isMatch = await bcrypt.compare(password, user.password);
+                }
+
                 if (isMatch) {
                     req.session.userId = user.id;
                     req.session.role = user.role;
@@ -91,6 +100,10 @@ const userController = {
                     updateData[key] = rawData[key];
                 }
             });
+
+            if (req.session.role === 'admin' && updateData.description !== undefined) {
+                delete updateData.description;
+            }
             
             if (req.file) {
                 updateData.photo = req.file.buffer;

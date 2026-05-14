@@ -44,7 +44,7 @@ class User {
         const sql = `UPDATE ${table} SET ${fields} WHERE id = ?`;
         return new Promise((resolve, reject) => {
             db.run(sql, values, function(err) {
-                if (err) reject(err);
+                if (err) return reject(err);
                 resolve({changes: this.changes});
             });
         });
