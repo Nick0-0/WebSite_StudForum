@@ -1,7 +1,7 @@
 {
   "name": "studforum",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Student Forum for students from same university",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
