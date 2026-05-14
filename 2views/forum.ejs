@@ -1,0 +1,114 @@
+<link rel="stylesheet" href="styles/forum-style.css" type="text/css">
+
+<div class="forum-page">
+    <div class="forum-action-bar">
+        <div class="search-box">
+            <form action="/forum" method="GET">
+                <input type="text" name="search" id="forum-search" placeholder="Поиск тем обсуждения...">
+            </form>
+        </div>
+
+        <button class="btn-create-topic" onclick="document.getElementById('topic-modal').style.display='flex'">
+            Создать новую тему
+        </button>
+    </div>
+
+    <main class="forum-grid">
+        <% if (topics && topics.length > 0) { %>
+            <% topics.forEach(topic => { %>
+                <div class="topic-card">
+                    <div class="topic-main-info" onclick="openTopic('<%= topic.id %>', '<%= topic.name %>')">
+                        <h3 class="topic-title"><%= topic.name %></h3>
+                        <p class="topic-meta">Автор: <%= topic.author_name %> | Сообщений: <%= topic.comments_count %></p>
+                    </div>
+                    
+                    <% if (role === 'admin') { %>
+                        <div class="admin-actions">
+                            <button class="btn-delete-topic" onclick="deleteTopic('<%= topic.id %>')">Удалить</button>
+                        </div>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="empty-text">Темы обсуждения не найдены. Создайте первую тему сами!</p>
+        <% } %>
+    </main>
+</div>
+
+<div id="topic-modal" class="modal">
+    <div class="modal-content">
+        <h3>Создать новую тему обсуждения</h3>
+        <form action="/forum/topic" method="POST" class="forum-form">
+            <input type="text" name="name" placeholder="Введите название темы" required maxlength="100">
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit">Создать</button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('topic-modal').style.display='none'">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="view-topic-modal" class="modal">
+    <div class="modal-content large-modal">
+        <h3 id="modal-topic-title">Название темы</h3>
+        
+        <div class="comments-stream" id="comments-container">
+            <p class="loading-text">Загрузка комментариев...</p>
+        </div>
+
+        <form action="/api/comment" method="POST" class="comment-form" id="add-comment-form">
+            <input type="hidden" name="topicId" id="modal-topic-id">
+            <textarea name="description" placeholder="Напишите ваш комментарий (до 512 символов)..." maxlength="512" required rows="3"></textarea>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit">Отправить</button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('view-topic-modal').style.display='none'">Закрыть</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    async function openTopic(topicId, topicName) {
+        document.getElementById('modal-topic-title').textContent = topicName;
+        document.getElementById('modal-topic-id').value = topicId;
+        const container = document.getElementById('comments-container');
+        container.innerHTML = '<p class="loading-text">Загрузка сообщений...</p>';
+        
+        document.getElementById('view-topic-modal').style.display = 'flex';
+
+        try {
+            const response = await fetch(`/api/topic/${topicId}/comments`);
+            const data = await response.json();
+            
+            if (data.comments && data.comments.length > 0) {
+                container.innerHTML = data.comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author"><strong>${c.author_name}</strong></span>
+                            <span class="comment-badge">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
+                        </div>
+                        <p class="comment-text">${c.description}</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="empty-text">В этой теме еще нет комментариев. Напишите первый!</p>';
+            }
+        } catch (err) {
+            container.innerHTML = '<p class="error-text">Не удалось загрузить комментарии.</p>';
+        }
+    }
+
+    async function deleteTopic(topicId) {
+        if (!confirm('Вы уверены, что хотите удалить эту тему обсуждения?')) return;
+
+        try {
+            const response = await fetch(`/admin/topic/${topicId}`, { method: 'DELETE' });
+            const data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            }
+        } catch (err) {
+            alert('Ошибка при удалении темы');
+        }
+    }
+</script>

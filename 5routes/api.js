@@ -6,7 +6,7 @@ const calendarController = require('../3controllers/calendarController');
 
 //Forum API
 router.get('/topics/search', forumController.renderForum);
-router.get('topic/:id/comments', forumController.getTopicDetails);
+router.get('/topic/:id/comments', forumController.getTopicDetails);
 router.post('/comment', forumController.addComment);
 
 //Document API
