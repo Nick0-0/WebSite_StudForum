@@ -1,12 +1,12 @@
-.main-words {
+.main-content {
     overflow: auto;
-    align-items: center;
-    display: block;
-    /* display: flex; */
-    /* flex-direction: column; */
     max-width: 800px;
-    margin: 0 20%;
+    margin: 0 auto;
+}
+.main-words {
+    margin: 0 30%;
 }
 .rules {
     float: right;
+    margin-right: 5%;
 }

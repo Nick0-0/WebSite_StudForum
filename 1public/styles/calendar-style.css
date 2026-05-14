@@ -121,8 +121,28 @@ a.back-btn:hover {
 }
 .modal-content input, .modal-content textarea {
     width: 100%;
+    max-width: 100%;
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+.modal-buttons .btn-submit, .modal-buttons .btn-cancel {
+    background: #296a4a;
+    color: whitesmoke;
+    border: none;
+    border-radius: 50px;
+    /* font-weight: bold; */
+    padding: 5px 10px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.modal-buttons .btn-submit:hover, .modal-buttons .btn-cancel:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
