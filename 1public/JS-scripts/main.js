@@ -148,4 +148,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadNotes();
+
+    //---------------------------------------------------------
+    // DYNAMIC SUBDOWNLOADING OF PERSONAL DOCUMENTS TO THE PROFILE (AJAX)
+    //---------------------------------------------------------
+    const profileDocsContainer = document.getElementById('my-profile-documents-list');
+    async function loadProfileDocuments() {
+        if (!profileDocsContainer) return;
+
+        try {
+            const response = await fetch('/api/my-documents');
+            const docs = await response.json();
+
+            if (docs && docs.length > 0) {
+                profileDocsContainer.innerHTML = docs.map(doc => {
+                    let displayName = 'Документ #' + doc.id;
+                    let privacyLabel = 'public';
+
+                    if (doc.type_of_document && doc.type_of_document.includes(':')) {
+                        const parts = doc.type_of_document.split(':');
+                        if (parts[0] === 'private') privacyLabel = 'private';
+                        if (parts[1]) displayName = parts[1];
+                    } else if (doc.type_of_document === 'private') {
+                        privacyLabel = 'private';
+                    }
+
+                    return `
+                    <div class="profile-doc-row" id="doc-block-${doc.id}">
+                        <div class="profile-doc-info">
+                            <img src="media/file-icon.png" alt="Doc" class="profile-doc-icon">
+                            <div class="profile-doc-meta">
+                                <span class="profile-doc-name">${displayName}</span>
+                                <span class="profile-doc-badge ${privacyLabel}">${privacyLabel}</span>
+                            </div>
+                        </div>
+                        <div class="profile-doc-actions">
+                            <a href="/document/download/${doc.id}" class="btn-profile-download" title="Скачать файл">
+                                Скачать
+                            </a>
+                            <button class="btn-delete-doc-cross" onclick="deleteProfileDocument(${doc.id})" title="Удалить документ">&times;</button>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            } else {
+                profileDocsContainer.innerHTML = '<p class="empty-text">Вы еще не загружали учебные материалы</p>';
+            }
+        } catch (error) {
+            console.error(error);
+            profileDocsContainer.innerHTML = '<p class="error-text">Не удалось загрузить документы</p>';
+        }
+    }
+
+    window.deleteProfileDocument = async function(docId) {
+        try {
+            const response = await fetch(`/document/delete/${docId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const docElement = document.getElementById(`doc-block-${docId}`);
+                if (docElement) {
+                    docElement.style.opacity = '0';
+                    docElement.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        loadProfileDocuments();
+                    }, 300);
+                }
+            } else {
+                alert('Не удалось удалить документ');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Ошибка при отправке запроса на сервер');
+        }
+    };
+
+    loadProfileDocuments();
 });

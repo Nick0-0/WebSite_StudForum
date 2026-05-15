@@ -80,6 +80,18 @@ const documentController = {
         } catch (error) {
             res.status(500).json({error: 'Download private documents error'});
         }
+    },
+
+    deleteDocument: async (req, res) => {
+        try {
+            const docId = req.params.id;
+            await Document.delete(docId);
+            
+            return res.json({success: true});
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({success: false, error: 'Database delete document error'});
+        }
     }
 };
 

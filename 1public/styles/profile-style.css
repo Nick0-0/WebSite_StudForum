@@ -335,3 +335,105 @@ NOTES_STYLES
     line-height: 1.4;
     white-space: pre-line; /* save user wrap */
 }
+
+/*----------------------------------------------------
+DOCS_STYLES
+----------------------------------------------------*/
+.profile-docs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+/* Строка отдельного документа */
+.profile-doc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #eef2ee;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+    transition: all 0.3s ease;
+}
+.profile-doc-row:hover {
+    border-color: #4eba85;
+    box-shadow: 0 4px 12px rgba(41, 106, 74, 0.05);
+}
+.profile-doc-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.profile-doc-icon {
+    height: 30px;
+    width: auto;
+}
+.profile-doc-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.profile-doc-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 11pt;
+}
+/* Баджи приватности (публичный / приватный) */
+.profile-doc-badge {
+    font-size: 8pt;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 50px;
+    width: fit-content;
+    text-transform: uppercase;
+}
+.profile-doc-badge.public {
+    background-color: #e8f5e9;
+    color: #296a4a;
+}
+.profile-doc-badge.private {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+.profile-doc-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.btn-profile-download {
+    padding: 6px 18px;
+    background-color: #296a4a;
+    color: white !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 9.5pt;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+.btn-profile-download:hover {
+    background-color: #4eba85;
+    transform: scale(1.05);
+}
+.btn-delete-doc-cross {
+    background: transparent;
+    border: none;
+    color: #bbb;
+    font-size: 16pt;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+.btn-delete-doc-cross:hover {
+    color: #d9534f;
+    background-color: #fce8e6;
+}

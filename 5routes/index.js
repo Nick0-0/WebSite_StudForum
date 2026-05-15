@@ -31,6 +31,7 @@ router.post('/forum/topic', isAuth, forumController.createTopic);
 router.get('/document', isAuth, documentController.renderDocuments);
 router.post('/document/upload', isAuth, uploadDisk.single('doc'), documentController.uploadDocument);
 router.get('/document/download/:id', isAuth, documentController.downloadDocument);
+router.delete('/document/delete/:id', isAuth, documentController.deleteDocument);
 
 //calendar
 router.get('/calendar', isAuth, calendarController.renderCalendar);
