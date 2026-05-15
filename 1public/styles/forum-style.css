@@ -178,6 +178,9 @@
     padding: 12px 15px;
     border-radius: 4px 12px 12px 4px;
 }
+.comment-item.admin {
+    border-left: 4px solid #e65100;
+}
 .comment-header {
     display: flex;
     justify-content: space-between;
@@ -194,6 +197,9 @@
     border-radius: 50px;
     font-weight: bold;
     font-size: 8.5pt;
+}
+.comment-badge.admin {
+    color: #e65100;
 }
 .comment-text {
     margin: 0;

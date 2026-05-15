@@ -82,10 +82,10 @@
             
             if (data.comments && data.comments.length > 0) {
                 container.innerHTML = data.comments.map(c => `
-                    <div class="comment-item">
+                    <div class="comment-item ${c.type_of_user === 'admin' ? 'admin' : ''}">
                         <div class="comment-header">
                             <span class="comment-author"><strong>${c.author_name}</strong></span>
-                            <span class="comment-badge">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
+                            <span class="comment-badge ${c.type_of_user === 'admin' ? 'admin' : ''}">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
                         </div>
                         <p class="comment-text">${c.description}</p>
                     </div>
