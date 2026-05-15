@@ -51,9 +51,13 @@ const forumController = {
 
         try {
             await Comment.create(topicId, role, userId, description);
-            res.redirect('/forum');
+            // res.redirect('/forum');
+            //now we have AJAX requests
+            return res.json({success: true});
         } catch (error) {
-            res.status(500).send('Add comment error');
+            // res.status(500).send('Add comment error');
+            console.error(error);
+            return res.status(500).json({success: false, error: 'Add comment error'});
         }
     },
 

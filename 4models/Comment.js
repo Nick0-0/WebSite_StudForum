@@ -32,7 +32,7 @@ class Comment {
         LEFT JOIN Students s ON c.user_id = s.id AND c.type_of_user = 'student'
         LEFT JOIN Admins a ON c.user_id = a.id AND c.type_of_user = 'admin'
         WHERE c.topic_id = ?
-        ORDER BY c.id ASC
+        ORDER BY c.id DESC
         `;
         return new Promise((resolve, reject) => {
             db.all(sql, [topicId], (err, rows) => {

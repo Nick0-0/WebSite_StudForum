@@ -226,4 +226,45 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     loadProfileDocuments();
+
+    //---------------------------------------------------------
+    // ASYNC POST COMMENT WITHOUT RELOAD PAGE (AJAX)
+    //---------------------------------------------------------
+    const addCommentForm = document.getElementById('add-comment-form');
+
+    if (addCommentForm) {
+        addCommentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const topicId = document.getElementById('modal-topic-id').value;
+            const commentInput = document.getElementById('comment-text-input');
+
+            try {
+                const response = await fetch('/api/comment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        topicId: topicId,
+                        description: commentInput.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    commentInput.value = '';
+
+                    if (typeof openTopic === 'function') {
+                        const topicName = document.getElementById('modal-topic-title').textContent;
+                        openTopic(topicId, topicName);
+                    }
+                } else {
+                    alert('Не удалось отправить комментарий');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Ошибка связи с сервером');
+            }
+        });
+    }
 });

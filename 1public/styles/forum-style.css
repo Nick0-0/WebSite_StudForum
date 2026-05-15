@@ -139,6 +139,29 @@
 .large-modal {
     max-width: 650px;
 }
+.forum-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.forum-form input[type="text"] {
+    width: 100%;
+    height: 45px;
+    padding: 0 20px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    background-color: #f9f9f9;
+    font-size: 11pt;
+    outline: none;
+    box-sizing: border-box; /* Защита от вылетания за границы модалки */
+    transition: all 0.3s ease;
+}
+/* Эффект фокуса при клике в поле ввода */
+.forum-form input[type="text"]:focus {
+    border-color: #296a4a;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(41, 106, 74, 0.15);
+}
 
 /* @keyframes modalSlideUp {
     from { opacity: 0; transform: translateY(25px); }

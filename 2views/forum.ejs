@@ -56,9 +56,9 @@
             <p class="loading-text">Загрузка комментариев...</p>
         </div>
 
-        <form action="/api/comment" method="POST" class="comment-form" id="add-comment-form">
+        <form class="comment-form" id="add-comment-form">
             <input type="hidden" name="topicId" id="modal-topic-id">
-            <textarea name="description" placeholder="Напишите ваш комментарий (до 512 символов)..." maxlength="512" required rows="3"></textarea>
+            <textarea name="description" id="comment-text-input" placeholder="Напишите ваш комментарий (до 512 символов)..." maxlength="512" required rows="3"></textarea>
             <div class="modal-buttons">
                 <button type="submit" class="btn-submit">Отправить</button>
                 <button type="button" class="btn-cancel" onclick="document.getElementById('view-topic-modal').style.display='none'">Закрыть</button>
