@@ -126,6 +126,33 @@ const userController = {
         req.session.destroy(() => {
             res.redirect('/');
         });
+    },
+
+    createNote: async (req, res) => {
+        const Note = require('../4models/Note');
+        try {
+            const {description} = req.body;
+            const studentId = req.session.userId;
+
+            await Note.create(studentId, description);
+            res.json({success: true});
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({success: false, error: 'Database save not error'});
+        }
+    },
+
+    deleteNote: async (req, res) => {
+        const Note = require('../4models/Note');
+        try {
+            const noteId = req.params.id;
+            const studentId = req.session.userId;
+            await Note.delete(noteId, studentId);
+            res.json({success: true });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({success: false, error: 'Datbase delete note error'});
+        }
     }
 };
 

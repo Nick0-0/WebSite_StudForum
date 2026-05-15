@@ -39,5 +39,7 @@ router.post('/calendar/suggest', isAuth, calendarController.suggestEvent);
 //profile
 router.get('/profile', isAuth, userController.getProfile);
 router.post('/profile/update', isAuth, upload.single('photo'), userController.updateProfile);
+router.post('/profile/note', isAuth, userController.createNote);
+router.delete('/profile/note/:id', isAuth, userController.deleteNote);
 
 module.exports = router;

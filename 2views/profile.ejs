@@ -97,7 +97,23 @@
             </section>
 
             <section id="tab-notes" class="tab-content">
-                <h3>Мои личные заметки</h3>
+                <div class="notes-header-zone">
+                    <h3>Мои личные заметки</h3>
+                    <button class="btn-add-note-trigger" onclick="toggleNoteForm()">
+                        + Добавить заметку
+                    </button>
+                </div>
+
+                <div id="quick-note-form-block" class="quick-note-form-container" style="display: none;">
+                    <form id="add-note-form" class="note-ajax-form">
+                        <textarea name="description" id="note-text-input" placeholder="Введите текст заметки..." maxlength="1000" required rows="3"></textarea>
+                        <div class="note-form-buttons">
+                            <button type="submit" class="btn-save-note">Сохранить</button>
+                            <button type="button" class="btn-cancel-note" onclick="toggleNoteForm()">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+
                 <div id="my-notes-list">
                     <p class="loading-text">Загрузка заметок...</p>
                 </div>
