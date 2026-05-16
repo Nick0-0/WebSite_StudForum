@@ -298,4 +298,93 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = input.length === 0 ? '' : formatted;
         });
     }
+
+    //---------------------------------------------------------
+    // MODERATION OF PENDING EVENTS IN THE ADMIN PROFILE (AJAX)
+    //---------------------------------------------------------
+    const pendingContainer = document.getElementById('admin-pending-list');
+
+    async function loadPendingEvents() {
+        if (!pendingContainer) return;
+
+        try {
+            const response = await fetch('/api/pending-events');
+            const events = await response.json();
+
+            if (events && events.length > 0) {
+                pendingContainer.innerHTML = events.map(ev => {
+                    const safeDesc = (ev.description || '').replace(/'/g, "\\'");
+
+                    return `
+                        <div class="pending-card" id="event-block-${ev.journal_id}">
+                            <div class="pending-card-body">
+                                <h4>${ev.name}</h4>
+                                <p class="pending-time"><strong>Время:</strong> ${ev.start_date} — ${ev.end_date}</p>
+                                <p class="pending-desc">${ev.description || 'Описание отсутствует.'}</p>
+                            </div>
+                            <div class="pending-card-actions">
+                                <!-- Передаем объект с данными прямо в функцию клика -->
+                                <button class="btn-approve" onclick="moderateEvent(${ev.journal_id}, 'approve', {name: '${ev.name}', start_date: '${ev.start_date}', end_date: '${ev.end_date}', description: '${safeDesc}'})">Одобрить</button>
+                                <button class="btn-reject" onclick="moderateEvent(${ev.journal_id}, 'reject')">Отклонить</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                pendingContainer.innerHTML = '<p class="empty-text">Новых предложенных событий пока нет.</p>'
+            }
+        } catch (error) {
+            console.error(error);
+            pendingContainer.innerHTML = '<p class="error-text">Не удалось загрузить список предложенных событий.</p>';
+        }
+    }
+
+    window.moderateEvent = async function(eventId, action, eventData = {}) {
+        try {
+            let response;
+            
+            if (action === 'approve') {
+                response = await fetch('/admin/calendar/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        journalId: eventId,
+                        name: eventData.name,
+                        start_date: eventData.start_date,
+                        end_date: eventData.end_date,
+                        description: eventData.description
+                    })
+                });
+            } else {
+                response = await fetch(`/admin/calendar/reject/${eventId}`, {
+                    method: 'DELETE'
+                });
+            }
+
+            let isSuccess = response.ok;
+            
+            if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+                const data = await response.json();
+                isSuccess = data.success;
+            }
+
+            if (isSuccess) {
+                const element = document.getElementById(`event-block-${eventId}`);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        loadPendingEvents();
+                    }, 300);
+                }
+            } else {
+                alert('Не удалось выполнить модерацию');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Ошибка связи с сервером');
+        }
+    };
+
+    loadPendingEvents();
 });

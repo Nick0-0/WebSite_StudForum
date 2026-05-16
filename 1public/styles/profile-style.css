@@ -437,3 +437,77 @@ DOCS_STYLES
     color: #d9534f;
     background-color: #fce8e6;
 }
+
+/*----------------------------------
+    PENDING EVENTS AND APPROVE
+-----------------------------------*/
+.pending-events-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+.pending-card {
+    background: white;
+    border: 1px solid #eef2ee;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+    transition: all 0.3s ease;
+}
+.pending-card:hover {
+    border-color: #296a4a;
+    box-shadow: 0 6px 15px rgba(41, 106, 74, 0.05);
+}
+.pending-card-body h4 {
+    margin: 0 0 8px 0;
+    color: #296a4a;
+    font-size: 13pt;
+}
+.pending-time {
+    margin: 0 0 8px 0;
+    font-size: 9.5pt;
+    color: #666;
+}
+.pending-desc {
+    margin: 0;
+    font-size: 10.5pt;
+    color: #444;
+}
+.pending-card-actions {
+    display: flex;
+    gap: 10px;
+    min-width: 220px;
+}
+.btn-approve, .btn-reject {
+    flex: 1;
+    height: 38px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-approve {
+    background-color: #296a4a;
+    color: white;
+}
+.btn-approve:hover {
+    background-color: #4eba85;
+    transform: scale(1.03);
+}
+.btn-reject {
+    background-color: #fce8e6;
+    color: #d9534f;
+    border: 1px solid #f5c2be;
+}
+.btn-reject:hover {
+    background-color: #d9534f;
+    color: white;
+    transform: scale(1.03);
+}

@@ -53,8 +53,9 @@ const calendarController = {
 
     //helper func
     getPendingEventsJSON: async (req, res) => {
-        if (req.session.role !== 'admin') return 
-        res.status(403).json({error: 'Not access rights'});
+        if (req.session.role !== 'admin') {
+            return res.status(403).json({error: 'Not access rights'});
+        }
         try {
             const pending = await Event.getPending();
             res.json(pending);
@@ -70,11 +71,12 @@ const calendarController = {
         try {
             const {journalId, name, start_date, end_date, description} = req.body;
 
-            await Event.create({name, start_date, end_date, description});
+            await Event.create(name, start_date, end_date, description);
             await Event.deleteJournalEntry(journalId);
             res.json({success: true});
         } catch (error) {
-            res.status(500).send('Publication event error');
+            console.error("APPROVE_EVENT ERROR:", error);
+            res.status(500).json({success: false, error: 'Publication event error'});
         }
     },
 
@@ -82,10 +84,11 @@ const calendarController = {
         if (req.session.role !== 'admin') return res.status(403).send('Not access rights');
 
         try {
-            await Event.delete(req.params.id);
-            res.redirect('/calendar');
+            await Event.deleteJournalEntry(req.params.id);
+            res.json({success: true});
         } catch (error) {
-            res.status(500).send('Delete error');
+            console.error("DELETE_EVENT ERROR:", error);
+            res.status(500).json({success: false, error: 'Delete error'});
         }
     }
 };

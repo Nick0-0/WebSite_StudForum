@@ -17,8 +17,8 @@ router.delete('/topic/:id', forumController.deleteTopic);
 
 //Calendar management
 router.get('/pending-events', calendarController.renderPendingEvents);
-router.post('/approve-event', calendarController.approveEvent);
-router.post('/delete-event/:id', calendarController.deleteEvent);
+router.post('/calendar/approve', calendarController.approveEvent);
+router.delete('/calendar/reject/:id', calendarController.deleteEvent);
 
 //publication news (for latest versions and future)
 router.post('/post-news', (req, res) => {
