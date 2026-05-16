@@ -6,20 +6,59 @@
     <section class="auth-box">
         <h2>Регистрация студента</h2>
         <form action="/auth/register" method="POST" class="auth-form">
-            <input type="text" name="login" placeholder="Login to 16 symbols" maxlength="16" required>
+            <input type="text" name="login" placeholder="Логин (4-16 симв.)" 
+            pattern="^[a-zA-Z0-9_]{4, 16}"
+            title="Логин должен содержать от 4 до 16 символов (только латинские буквы, цифры или подчеркивание)"
+            required>
+
             <div class="name-group">
-                <input type="text" name="first_name" placeholder="First name" maxlength="32" required>
-                <input type="text" name="last_name" placeholder="Second name" maxlength="32" required>
+                <input type="text" name="first_name" placeholder="Имя" 
+                pattern="^[A-Za-zА-Яа-яЁё\-]+$"
+                title="Имя должно содержать только буквы"
+                maxlength="32" required>
+
+                <input type="text" name="last_name" placeholder="Фамилия" 
+                pattern="^[A-Za-zА-Яа-яЁё\-]+$"
+                title="Имя должно содержать только буквы"
+                maxlength="32" required>
             </div>
-            <input type="email" name="email" placeholder="Email" maxlength="64" required>
-            <input type="tel" name="phone_number" placeholder="+7 (000) 000-00-00" required>
+            <input type="email" name="email" placeholder="Эл. почта" maxlength="64" required>
+            
+            <input type="tel" name="phone_number" id="phone-input" 
+            placeholder="+7 (000) 000-00-00"
+            pattern="^\+7\s?\(?[0-9]{3}\)?\s?[0-9]{3}-?[0-9]{2}-?[0-9]{2}$"
+            title="Номер телефона должен быть в формате: +7 (000) 000-00-00"
+            required>
 
             <div class="study-group">
-                <input type="number" name="course" placeholder="Course (1-5)" min="1" max="5" required>
-                <input type="text" name="faculty" placeholder="Faculty" maxlength="64" required>
+                <input type="number" name="course" placeholder="Курс (1-5)" min="1" max="5" required>
+                
+                <select name="faculty" id="faculty-select" required>
+                    <option value="" disabled selected>-- Выберите институт --</option>
+                    <option value="ГИ">ГИ</option>
+                    <option value="ИСИ">ИСИ</option>
+                    <option value="ИБСиБ">ИБСиБ</option>
+                    <option value="ИКНК">ИКНК</option>
+                    <option value="ИММиТ">ИММиТ</option>
+                    <option value="ИФМиТ">ИФМиТ</option>
+                    <option value="ИФКСТ">ИФКСТ</option>
+                    <option value="ИЭиТ">ИЭиТ</option>
+                    <option value="ИЭ">ИЭ</option>
+                    <option value="ПИШ ЦИ">ПИШ ЦИ</option>
+                    <option value="ФизМех">ФизМех</option>
+                    <option value="ИПМЭиТ">ИПМЭиТ</option>
+                </select>
+
+                <!-- <input type="text" name="faculty" placeholder="Faculty" maxlength="64" required> -->
             </div>
-            <input type="text" name="group_number" placeholder="Group number" maxlength="32" required>
-            <input type="password" name="password" placeholder="Password" maxlength="32" required>
+            <input type="text" name="group_number" placeholder="Номер группы" 
+            pattern="^[0-9a-zA-Z\/\\\-_]+$"
+            title="Номер группы может содержать цифры, буквы и знаки / - _"
+            maxlength="32" required>
+
+            <input type="password" name="password" placeholder="Пароль (минимум 6 симв.)" 
+            minlength="6" maxlength="32"
+            required>
 
             <button type="submit" class="btn-submit">Зарегестрироваться</button>
         </form>

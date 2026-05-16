@@ -70,6 +70,31 @@ a.back-btn:hover {
 .name-group input, .study-group input {
     width: 50%;
 }
+.auth-form select {
+    height: 45px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 50px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: box-shadow 0.3s ease;
+    
+    /* Улучшение внешнего вида стрелочки в некоторых браузерах */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='10' height='10' viewBox='0 0 10 10'><path d='M0 3l5 5 5-5z' fill='%23296a4a'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+}
+.auth-form select:focus {
+    box-shadow: 0 0 0 2px #296a4a;
+    background-color: #ffffff;
+}
 .btn-submit {
     margin-top: 15px;
     height: 50px;
