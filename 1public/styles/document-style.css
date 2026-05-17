@@ -245,3 +245,36 @@
 .btn-cancel:hover {
     background-color: #e0e0e0;
 }
+
+/*------------------------------------
+    DELETE DOC BUTTON FOR ADMIN
+------------------------------------*/
+.doc-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+.admin-doc-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.btn-admin-delete-doc {
+    width: 90%;
+    height: 32px;
+    background-color: #fce8e6;
+    color: #d9534f;
+    border: 1px solid #f5c2be;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 9pt;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-admin-delete-doc:hover {
+    background-color: #d9534f;
+    color: white;
+    box-shadow: 0 4px 10px rgba(217, 83, 79, 0.2);
+    transform: scale(1.02);
+}

@@ -16,15 +16,33 @@
     <main class="documents-grid" id="docs-grid">
         <% if (documents && documents.length > 0) { %>
             <% documents.forEach(doc => { %>
-                <a href="/document/download/<%= doc.id %>" class="doc-card" data-title="<%= doc.first_name %> <%= doc.last_name %>">
-                    <div class="doc-icon-wrapper">
-                        <img src="/media/file-icon.png" alt="File" class="doc-icon">
-                    </div>
-                    <div class="doc-info">
-                        <span class="doc-name">Документ #<%= doc.id %></span>
-                        <p class="doc-author">Автор: <%= doc.first_name %> <%= doc.last_name %></p>
-                    </div>
-                </a>
+                <%
+                    let displayName = 'Документ #' + doc.id;
+                    if (doc.type_of_document && doc.type_of_document.includes(':')) {
+                        const parts = doc.type_of_document.split(':');
+                        if (parts[1]) displayName = parts[1];
+                    }
+                %>
+
+                <div class="doc-card-wrapper" id="global-doc-block-<%= doc.id %>">
+                    <a href="/document/download/<%= doc.id %>" class="doc-card" data-title="<%= doc.first_name %> <%= doc.last_name %>">
+                        <div class="doc-icon-wrapper">
+                            <img src="/media/file-icon.png" alt="File" class="doc-icon">
+                        </div>
+                        <div class="doc-info">
+                            <span class="doc-name">Документ #<%= doc.id %></span>
+                            <p class="doc-author">Автор: <%= doc.first_name %> <%= doc.last_name %></p>
+                        </div>
+                    </a>
+
+                    <% if (role === 'admin') { %>
+                        <div class="admin-doc-actions">
+                            <button class="btn-admin-delete-doc" onclick="adminDeleteDocument('<%= doc.id %>')">
+                                Удалить файл
+                            </button>
+                        </div>
+                    <% } %>
+                </div>
             <% }) %>
         <% } else { %>
             <p class="empty-text">Документов пока нет. Станьте первым, кто загрузит учебные материалы!</p>

@@ -416,4 +416,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    //---------------------------------------------------------
+    // DELETE DOCUMENT BY ADMIN FROM PUBLIC LIST (AJAX)
+    //---------------------------------------------------------
+    window.adminDeleteDocument = async function(docId) {
+        try {
+            const response = await fetch(`/document/delete/${docId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                const docElement = document.getElementById(`global-doc-block-${docId}`);
+                if (docElement) {
+                    docElement.style.opacity = '0';
+                    docElement.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        docElement.remove();
+                    }, 300);
+                }
+            } else {
+                alert('Не удалось удалить документ (ошибка сервера)');
+            }
+        } catch (error) {
+            console.error("Delete document by admin error", error);
+            alert('Ошибка связи с сервером');
+        }
+    }
 });

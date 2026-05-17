@@ -20,6 +20,7 @@ header {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 20px whitesmoke;
+    font-size: larger;
 }
 a.icon {
     display: flex;
@@ -42,7 +43,7 @@ nav.navigation-bar {
     gap: 20px;
     align-items: center;
     margin-left: 20px;
-    text-wrap-style: balance;
+    /* text-wrap-style: balance; */
     text-align: center;
 }
 .nav-link, .profile-btn {
@@ -51,7 +52,7 @@ nav.navigation-bar {
     border-radius: 50px;
     color: #296a4a !important;
     font-weight: bold;
-    font-size: 10pt;
+    font-size: 11pt;
     font-family: sans-serif;
     transition: all 0.5s ease;
     text-decoration: none;
@@ -60,7 +61,7 @@ nav.navigation-bar {
     justify-content: center;
 }
 .profile-btn {
-    font-size: 12pt;
+    font-size: 13pt;
     height: 40px;
     min-width: 80px;
     margin: 0 30px;
