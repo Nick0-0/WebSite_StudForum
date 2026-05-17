@@ -22,12 +22,19 @@
             
             <% for(let i = 1; i <= 31; i++) { %>
                 <% 
-                const dayEvents = events.filter(e => e.start_date.startsWith(i < 10 ? '0'+i : i));
+                const dayStr = i < 10 ? '0' + i : String(i);
+                const dayEvents = events.filter(e => e.start_date && e.start_date.startsWith(dayStr));
                 %>
                 <div class="calendar-day <%= dayEvents.length > 0 ? 'has-event' : '' %>">
                     <span class="day-number"><%= i %></span>
                     <% if (dayEvents.length > 0) { %>
-                        <div class="event-dot" title="<%= dayEvents[0].name %>"></div>
+                        <div class="day-events-container">
+                            <% dayEvents.forEach(event => { %>
+                                <div class="event-dot" 
+                                     title="<%= event.name %> (<%= event.description || 'Без описания' %>)">
+                                </div>
+                            <% }) %>
+                        </div>
                     <% } %>
                 </div>
             <% } %>
@@ -48,14 +55,29 @@
 <div id="suggest-modal" class="modal">
     <div class="modal-content">
         <h3>Предложить событие</h3>
-        <form action="/calendar/suggest" method="POST">
-            <input type="text" name="name" placeholder="Event name" required>
-            <input type="text" name="start_date" placeholder="Start date (DD.MM.YYYY HH:MM)" required>
-            <input type="text" name="end_date" placeholder="End date" required>
-            <textarea name="description" placeholder="Event description"></textarea>
+        <form action="/calendar/suggest" method="POST" class="upload-form" id="suggest-event-form">
+
+            <div class="input-field">
+                <label for="event-name">Название события:</label>
+                <input type="text" name="name" id="event-name" 
+                placeholder="Например: День Открытых Дверей" maxlength="100" required>
+            </div>
+            <div class="input-field">
+                <label for="event-start">Дата и время начала:</label>
+                <input type="datetime-local" name="start_date" id="event-start" required>
+            </div>
+            <div class="input-field">
+                <label for="event-end">Дата и время окончания:</label>
+                <input type="datetime-local" name="end_date" id="event-end" required>
+            </div>
+            <div class="input-field">
+                <label for="event-desc">Описание события (до 512 симв.):</label>
+                <textarea name="description" id="event-desc" placeholder="Кратко расскажите о мероприятии..." maxlength="512" rows="4"></textarea>
+            </div>
+
             <div class="modal-buttons">
-                <button type="submit" class="btn-submit">Submit</button>
-                <button type="button" class="btn-cancel" onclick="document.getElementById('suggest-modal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn-submit">Отправить</button>
+                <button type="button" class="btn-cancel" onclick="document.getElementById('suggest-modal').style.display='none'">Отменить</button>
             </div>
         </form>
     </div>

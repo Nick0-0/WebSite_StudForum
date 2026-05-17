@@ -68,16 +68,32 @@ a.back-btn:hover {
     background-color: #4eba85;
     color: white;
 }
+.calendar-day.has-event .event-dot {
+    background-color: #ffffff;
+}
 .day-number {
     font-size: 1.1rem;
     font-weight: 500;
 }
-.event-dot {
-    width: 6px;
-    height: 6px;
-    background-color: white;
-    border-radius: 50%;
+.day-events-container {
+    display: flex;
+    justify-content: center;
+    gap: 4px; /* Отступ между точками */
     margin-top: 4px;
+    width: 100%;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+.event-dot {
+    width: 5px;
+    height: 5px;
+    background-color: #4eba85;
+    border-radius: 50%;
+    /* margin-top: 4px; */
+    transition: transform 0.2s ease;
+}
+.event-dot:hover {
+    transform: scale(1.4);
 }
 .calendar-sidebar {
     flex: 1;
@@ -146,4 +162,37 @@ a.back-btn:hover {
 .modal-buttons .btn-submit:hover, .modal-buttons .btn-cancel:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.upload-form .input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+.upload-form .input-field label {
+    font-weight: bold;
+    color: #296a4a;
+    font-size: 10pt;
+}
+.upload-form input[type="text"],
+.upload-form input[type="datetime-local"],
+.upload-form textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    background-color: #f9f9f9;
+    font-size: 10.5pt;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+.upload-form textarea {
+    border-radius: 12px;
+    resize: none;
+}
+.upload-form input:focus, .upload-form textarea:focus {
+    border-color: #296a4a;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(41, 106, 74, 0.15);
 }

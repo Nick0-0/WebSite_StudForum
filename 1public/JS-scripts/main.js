@@ -387,4 +387,33 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     loadPendingEvents();
+
+    //---------------------------------------------------------
+    // VALIDATION OF PENDING EVENTS FORM
+    //---------------------------------------------------------
+    const suggestForm = document.getElementById('suggest-event-form');
+    const startInput = document.getElementById('event-start');
+    const endInput = document.getElementById('event-end');
+
+    if (suggestForm && startInput && endInput) {
+        const now = new Date();
+        const tzOffset = now.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(now - tzOffset)).toISOString().slice(0, 16);
+
+        startInput.min = localISOTime;
+
+        startInput.addEventListener('change', () => {
+            endInput.min = startInput.value;
+        });
+
+        suggestForm.addEventListener('submit', (e) => {
+            const startDate = new Date(startInput.value);
+            const endDate = new Date(endInput.value);
+
+            if (endDate <= startDate) {
+                e.preventDefault();
+                alert('Ошибка: Дата окончания события должна быть позже даты его начала!');
+            }
+        });
+    }
 });
