@@ -323,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <p class="pending-desc">${ev.description || 'Описание отсутствует.'}</p>
                             </div>
                             <div class="pending-card-actions">
-                                <!-- Передаем объект с данными прямо в функцию клика -->
                                 <button class="btn-approve" onclick="moderateEvent(${ev.journal_id}, 'approve', {name: '${ev.name}', start_date: '${ev.start_date}', end_date: '${ev.end_date}', description: '${safeDesc}'})">Одобрить</button>
                                 <button class="btn-reject" onclick="moderateEvent(${ev.journal_id}, 'reject')">Отклонить</button>
                             </div>
@@ -443,4 +442,37 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Ошибка связи с сервером');
         }
     }
+
+    //---------------------------------------------------------
+    // ASYNC DELETE COMMENT BY ADMIN (AJAX)
+    //---------------------------------------------------------
+    document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-delete-comment-cross')) {
+            const button = e.target;
+            const commentId = button.getAttribute('data-id');
+
+            try {
+                const response = await fetch(`/admin/comment/delete/${commentId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const commentElement = document.getElementById(`comment-block-${commentId}`);
+                    if (commentElement) {
+                        commentElement.style.opacity = '0';
+                        commentElement.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            commentElement.remove();
+                        }, 300);
+                    }
+                } else {
+                    alert('Не удалось удалить комментарий');
+                }
+            } catch (error) {
+                console.error('Delete comment by admin error:', error);
+                alert('Ошибка связи с сервером');
+            }
+        }
+    });
 });

@@ -73,6 +73,24 @@ const forumController = {
         } catch (error) {
             res.status(500).send('Delete topic error');
         }
+    },
+
+    deleteComment: async (req, res) => {
+        if (req.session.role !== 'admin') {
+            return res.status(403).json({error: 'Not access rights'});
+        }
+
+        try {
+            const commentId = req.params.id;
+            const comment = require('../4models/Comment');
+
+            await Comment.delete(commentId);
+
+            return res.json({success: true});
+        } catch (error) {
+            console.error("Delete comment from DB error:", error);
+            return res.status(500).json({success: false, error: 'Database delete comment error'});
+        }
     }
 };
 

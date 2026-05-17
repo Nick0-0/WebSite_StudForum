@@ -81,15 +81,27 @@
             const data = await response.json();
             
             if (data.comments && data.comments.length > 0) {
-                container.innerHTML = data.comments.map(c => `
-                    <div class="comment-item ${c.type_of_user === 'admin' ? 'admin' : ''}">
-                        <div class="comment-header">
-                            <span class="comment-author"><strong>${c.author_name}</strong></span>
-                            <span class="comment-badge ${c.type_of_user === 'admin' ? 'admin' : ''}">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
+                container.innerHTML = data.comments.map(c => {
+                    const isAdmin = '<%= role %>' === 'admin';
+
+                    return `
+                        <div class="comment-item ${c.type_of_user === 'admin' ? 'admin' : ''}" id="comment-block-${c.id}">
+                            <div class="comment-header">
+                                <div class="comment-meta-info">
+                                    <span class="comment-author"><strong>${c.author_name}</strong></span>
+                                    <span class="comment-badge ${c.type_of_user === 'admin' ? 'admin' : ''}">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
+                                </div>
+                                
+                                ${isAdmin ? `
+                                    <button class="btn-delete-comment-cross" data-id="${c.id}" title="Удалить комментарий">
+                                        &times;
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <p class="comment-text">${c.description}</p>
                         </div>
-                        <p class="comment-text">${c.description}</p>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } else {
                 container.innerHTML = '<p class="empty-text">В этой теме еще нет комментариев. Напишите первый!</p>';
             }

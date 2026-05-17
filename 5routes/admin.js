@@ -13,7 +13,8 @@ function isAdmin(req, res, next) {
 router.use(isAdmin);
 
 //Forum management
-router.delete('/topic/:id', forumController.deleteTopic);
+router.delete('/topic/:id', isAdmin, forumController.deleteTopic);
+router.delete('/comment/delete/:id', isAdmin, forumController.deleteComment);
 
 //Calendar management
 router.get('/pending-events', calendarController.renderPendingEvents);

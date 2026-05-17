@@ -200,6 +200,7 @@
     border-left: 4px solid #296a4a; /* Зеленый маркер автора */
     padding: 12px 15px;
     border-radius: 4px 12px 12px 4px;
+    transition: all 0.3s ease;
 }
 .comment-item.admin {
     border-left: 4px solid #e65100;
@@ -281,4 +282,34 @@
     text-align: center;
     color: #888;
     font-style: italic;
+}
+
+/*-----------------------------------------
+    DELETE COMMENT FROM TOPIC BY ADMIN
+------------------------------------------*/
+.comment-meta-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.btn-delete-comment-cross {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 15pt;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+}
+.btn-delete-comment-cross:hover {
+    color: #d9534f;
+    background-color: #fce8e6;
 }
