@@ -16,7 +16,7 @@
     <main class="forum-grid">
         <% if (topics && topics.length > 0) { %>
             <% topics.forEach(topic => { %>
-                <div class="topic-card">
+                <div class="topic-card <%= topic.type_of_user === 'admin' ? 'admin' : '' %>">
                     <div class="topic-main-info" onclick="openTopic('<%= topic.id %>', '<%= topic.name %>')">
                         <h3 class="topic-title"><%= topic.name %></h3>
                         <p class="topic-meta">Автор: <%= topic.author_name %> | Сообщений: <%= topic.comments_count %></p>
@@ -91,7 +91,7 @@
                                     <span class="comment-author"><strong>${c.author_name}</strong></span>
                                     <span class="comment-badge ${c.type_of_user === 'admin' ? 'admin' : ''}">${c.type_of_user === 'admin' ? 'Модератор' : 'Студент'}</span>
                                 </div>
-                                
+
                                 ${isAdmin ? `
                                     <button class="btn-delete-comment-cross" data-id="${c.id}" title="Удалить комментарий">
                                         &times;
