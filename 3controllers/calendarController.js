@@ -13,11 +13,19 @@ const calendarController = {
                 events = await Event.getAll();
             }
 
+            let targetDate = new Date();
+            if (monthFilter) {
+                const [m, y] = monthFilter.split('.');
+                targetDate = new Date(y, m - 1, 1);
+            }
+
             res.render('calendar', {
                 events,
-                currentMonth: monthFilter || 'All time'
+                currentMonth: monthFilter || null,
+                targetDate: targetDate
             });
         } catch (error) {
+            console.error(error);
             res.status(500).send('Loading calendar error');
         }
     },
