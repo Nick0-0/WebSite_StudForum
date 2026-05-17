@@ -48,9 +48,19 @@ class Topic {
 
     static async delete(id) {
         return new Promise((resolve, reject) => {
-            db.run('DELETE FROM Topics WHERE id = ?', [id], (err) => {
-                if (err) return reject(err);
-                resolve(true);
+            db.run('DELETE FROM Comments WHERE topic_id = ?', [id], (err) => {
+                if (err) {
+                    console.error("Cascade deleting comments error:", err);
+                    return reject(err);
+                }
+
+                db.run('DELETE FROM Topics WHERE id = ?', [id], (err2) => {
+                    if (err) {
+                        console.error("Delete topic error:", err2);
+                        return reject(err2);
+                    } 
+                    resolve(true);
+                });
             });
         });
     }
