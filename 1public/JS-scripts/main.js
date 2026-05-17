@@ -475,4 +475,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    //---------------------------------------------------------
+    // AUTOMATIC SEARCH AND FILTRATION TOPICS ON THE FORUM (UX)
+    //---------------------------------------------------------
+    window.filterForumTopics = function() {
+        const query = document.getElementById('forum-search').value.toLowerCase();
+        
+        const topicCards = document.querySelectorAll('.forum-grid .topic-card');
+
+        topicCards.forEach(card => {
+            const titleElement = card.querySelector('.topic-title');
+            const metaElement = card.querySelector('.topic-meta');
+            
+            const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
+            const metaText = metaElement ? metaElement.textContent.toLowerCase() : '';
+
+            if (titleText.includes(query) || metaText.includes(query)) {
+                card.style.display = 'flex'; 
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    };
 });
