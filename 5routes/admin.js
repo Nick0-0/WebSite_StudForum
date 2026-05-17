@@ -21,9 +21,18 @@ router.post('/calendar/approve', calendarController.approveEvent);
 router.delete('/calendar/reject/:id', calendarController.deleteEvent);
 
 //publication news (for latest versions and future)
-router.post('/post-news', (req, res) => {
-    //logic of publication
-    res.send('News has published');
+router.post('/post-news', isAdmin, async (req, res) => {
+    try {
+        const {title, content} = req.body;
+        const adminId = req.session.userId;
+
+        const News = require('../4models/News');
+        await News.create(title, content, adminId);
+        res.redirect('/profile');
+    } catch (error) {
+        console.error("CRITICAL CLASS NEWS ERROR:", error)
+        res.status(500).send('Publication news error');
+    }
 });
 
 module.exports = router;

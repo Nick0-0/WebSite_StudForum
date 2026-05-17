@@ -6,6 +6,7 @@ const calendarController = require('../3controllers/calendarController');
 const userController = require('../3controllers/userController');
 const multer = require('multer');
 const upload = multer();
+const News = require('../4models/News');
 
 function isAuth(req, res, next) {
     if (req.session.userId) {
@@ -19,8 +20,13 @@ const uploadDisk = multer({
 });
 
 //main page
-router.get('/', (req, res) => {
-    res.render('index');
+router.get('/', async (req, res) => {
+    try {
+        const newsList = await News.getAll();
+        res.render('index', {newsList});
+    } catch (error) {
+        res.render('index', {newsList: []});
+    }
 });
 
 //forum page

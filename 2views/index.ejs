@@ -1,17 +1,80 @@
 <link rel="stylesheet" href="styles/index-style.css" type="text/css">
 
-<div class="main-content">
-    <div class="rules">
-        <h2>Это правила дома</h2>
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-        </ul>
+<div class="main-page-wrapper">
+    <div class="main-content">
+        <div class="main-words">
+            <h1>Приветствие</h1>
+            <p>
+                Это приветственный текст нашего студенческого портала.
+                Здесь вы можете общаться на форуме, узнавать об
+                университетских событиях по календарю и делиться учебными материалами.
+            </p>
+        </div>
+
+        <div class="rules">
+            <h2>Это правила дома</h2>
+            <ul>
+                <li>Уважайте участников сообщества.</li>
+                <li>Не публикуйте спам и рекламу.</li>
+                <li>Загружайте только учебные документы.</li>
+                <li>Сообщайте модераторам о нарушениях.</li>
+            </ul>
+        </div>
     </div>
-    <div class="main-words">
-        <h1>Приветствие</h1>
-        <p>Это приветственный текст</p>
+        
+    <div class="news-slider-section">
+        <h2>Последние новости</h2>
+
+        <% if (newsList && newsList.length > 0) { %>
+            <div class="slider-container">
+                <button class="slider-btn prev-btn" onclick="moveSlider(-1)">
+                    &lt;
+                </button>
+
+                <div class="slider-track-wrapper">
+                    <div class="slider-track" id="news-track">
+                        <% newsList.forEach(news => { %>
+                            <div class="news-slide-card">
+                                <div class="slide-header">
+                                    <h3><%= news.title %></h3>
+                                    <span class="slide-date"><%= news.date %></span>
+                                </div>
+                                <p class="slide-content"><%= news.content %></p>
+                            </div>
+                        <% })%>
+                    </div>
+                </div>
+
+                <button class="slider-btn next-btn" onclick="moveSlider(1)">
+                    &gt;
+                </button>
+            </div>
+        <% } else { %>
+            <p class="empty-news-text">
+                Официальных новостей пока нет. Администрация опубликует
+                их в ближайшее время.
+            </p>
+        <% } %>
     </div>
 </div>
+
+<script>
+    let currentSlide = 0;
+    
+    function moveSlider(direction) {
+        const track = document.getElementById('news-track');
+        if (!track) return;
+
+        const slides = document.querySelectorAll('.news-slide-card');
+        const totalSlides = slides.length;
+        if (totalSlides === 0) return;
+
+        currentSlide += direction;
+        if (currentSlide >= totalSlides) currentSlide = 0;
+        if (currentSlide < 0) currentSlide = totalSlides - 1;
+
+        const slideWidth = slides[0].clientWidth;
+
+        track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
+</script>

@@ -1,12 +1,155 @@
+
+.main-page-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 .main-content {
-    overflow: auto;
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: flex-start;
+}
+.main-words {
+    flex: 1.5;
+}
+.main-words h1 {
+    color: #296a4a;
+    margin-top: 0;
+}
+.main-words p {
+    color: #444;
+    line-height: 1.6;
+    font-size: 11pt;
+}
+.rules {
+    flex: 1;
+    background-color: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    border: 1px solid #eef2ee;
+}
+.rules h2 {
+    color: #d9534f;
+    margin-top: 0;
+    font-size: 14pt;
+}
+.rules ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 10.5pt;
+}
+
+/* ------------------------------------------------
+   NEWS SLIDER
+   ------------------------------------------------ */
+.news-slider-section {
+    margin-top: 5px;
+    border-top: 2px solid #eef2ee;
+    padding-top: 30px;
+}
+.news-slider-section h2 {
+    color: #296a4a;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
     max-width: 800px;
     margin: 0 auto;
 }
-.main-words {
-    margin: 0 30%;
+.slider-track-wrapper {
+    flex: 1;
+    overflow: hidden;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    border: 1px solid #eef2ee;
+    max-width: 100%;
+    height: auto;
+    min-height: 250px;
+    position: relative;
+    container-type: inline-size;
 }
-.rules {
-    float: right;
-    margin-right: 5%;
+.slider-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    width: max-content;
+}
+.news-slide-card {
+    width: 100cqw !important;
+    max-width: 800cqw !important;
+    min-width: 100cqw !important;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f2f0;
+    padding-bottom: 10px;
+}
+.slide-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 14pt;
+}
+.slide-date {
+    font-size: 9pt;
+    color: #888;
+    background-color: #f0f4f1;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+.slide-content {
+    margin: 0;
+    color: #555;
+    font-size: 11pt;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: normal;
+    padding-right: 10px;
+}
+.slider-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: white;
+    color: #296a4a;
+    font-weight: bold;
+    font-size: 14pt;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.slider-btn:hover {
+    background-color: #296a4a;
+    color: white;
+    border-color: #296a4a;
+    transform: scale(1.1);
+}
+.empty-news-text {
+    text-align: center;
+    color: #888;
+    font-style: italic;
 }
