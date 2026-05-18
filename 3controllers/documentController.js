@@ -130,6 +130,51 @@ const documentController = {
             console.error(error);
             res.status(500).json({success: false, error: 'Database delete document error'});
         }
+    },
+
+    getComplaintsJSON: async (req, res) => {
+        const db = require('../db');
+        const sql = `SELECT * FROM Journal WHERE table_name = 'Documents' AND action_type = 'insert' ORDER BY id DESC`;
+
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({error: 'Database error'});
+            }
+
+            const complaints = rows.map(row => {
+                try {
+                    const parsedData = JSON.parse(row.new_data);
+                    if (parsedData.type === 'complaint') {
+                        return {
+                            journal_id: row.id,
+                            student_id: row.user_id,
+                            document_id: parsedData.document_id,
+                            reason: parsedData.reason,
+                            timeStamp: parsedData.timeStamp
+                        };
+                    }
+                } catch (error) {
+                    return null;
+                }
+                return null;
+            }).filter(c => c !== null);
+            return res.json(complaints);
+        });
+    },
+
+    rejectComplaint: async (req, res) => {
+        const db = require('../db');
+        const sql = `DELETE FROM Journal WHERE id = ?`;
+
+        db.run(sql, [req.params.id], (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({success: false, error: 'Database error'});
+            }
+
+            return res.json({success: true});
+        });
     }
 };
 

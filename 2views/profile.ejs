@@ -121,7 +121,11 @@
         <% } else { %>
             <section id="tab-complaints" class="tab-content">
                 <h3>Модерация: жалобы от пользователей</h3>
-                <p>Список актуальных жалоб форума</p>
+                <p class="tab-subtitle">Список актуальных жалоб форума:</p>
+
+                <div id="admin-complaints-list" class="complaints-grid-layout">
+                    <p class="loading-text">Загрузка жалоб...</p>
+                </div>
             </section>
 
             <section id="tab-pending" class="tab-content">

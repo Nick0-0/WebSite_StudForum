@@ -555,3 +555,81 @@ DOCS_STYLES
     margin-left: 0;
     align-self: flex-start;
 }
+
+/*----------------------------------
+    PROFILE-COMPLAINTS FORM
+-----------------------------------*/
+.complaints-grid-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+.complaint-card {
+    background: white;
+    border: 1px solid #eef2ee;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+    transition: all 0.3s ease;
+}
+.complaint-card:hover {
+    border-color: #d9534f;
+    box-shadow: 0 6px 15px rgba(217, 83, 79, 0.04);
+}
+.complaint-card-body h4 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 12pt;
+}
+.complaint-reason-text {
+    margin: 0 0 6px 0;
+    font-size: 11pt;
+    color: #555;
+}
+.reason-highlight {
+    color: #d9534f;
+    font-weight: bold;
+}
+.complaint-meta-date {
+    margin: 0;
+    font-size: 9pt;
+    color: #888;
+}
+.complaint-card-actions {
+    display: flex;
+    gap: 10px;
+    min-width: 240px;
+}
+.btn-complaint-delete-doc, .btn-complaint-reject {
+    flex: 1;
+    height: 38px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 9.5pt;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-complaint-delete-doc {
+    background-color: #fce8e6;
+    color: #d9534f;
+    border: 1px solid #f5c2be;
+}
+.btn-complaint-delete-doc:hover {
+    background-color: #d9534f;
+    color: white;
+    transform: scale(1.03);
+}
+.btn-complaint-reject {
+    background-color: #f0f0f0;
+    color: #666;
+}
+.btn-complaint-reject:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.03);
+}

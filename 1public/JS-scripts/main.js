@@ -542,4 +542,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
+
+    //---------------------------------------------------------
+    // MODERATE DOCUMENT REPORT BY STUDENT IN THE ADMIN PROFILE (AJAX)
+    //---------------------------------------------------------
+    const complaintsContainer = document.getElementById('admin-complaints-list');
+
+    async function loadAdminComplaints() {
+        if (!complaintsContainer) return;
+
+        try {
+            const response = await fetch('/admin/complaints-events');
+            const complaints = await response.json();
+
+            if (complaints && complaints.length > 0) {
+                complaintsContainer.innerHTML = complaints.map(c => `
+                    <div class="complaint-card" id="complaint-row-${c.journal_id}">
+                        <div class="complaint-card-body">
+                            <h4>Жалоба на Документ #${c.document_id}</h4>
+                            <p class="complaint-reason-text"><strong>Причина:</strong> <span class="reason-highlight">${c.reason}</span></p>
+                            <p class="complaint-meta-date">Отправил Студент #${c.student_id} | ${c.timestamp}</p>
+                        </div>
+                        <div class="complaint-card-actions">
+                            <button class="btn-complaint-delete-doc" onclick="processComplaint(${c.journal_id}, ${c.document_id}, 'delete')">Удалить файл</button>
+                            <button class="btn-complaint-reject" onclick="processComplaint(${c.journal_id}, ${c.document_id}, 'reject')">Отклонить</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                complaintsContainer.innerHTML = '<p class="empty-text">Жалоб от студентов пока нет. На сайте порядок!</p>';
+            }
+        } catch (err) {
+            console.error(err);
+            complaintsContainer.innerHTML = '<p class="error-text">Не удалось загрузить список жалоб.</p>';
+        }
+    }
+
+    window.processComplaint = async function(journalId, docId, action) {
+        try {
+            let response;
+            if (action === 'delete') {
+                response = await fetch(`/document/delete/${docId}`, { method: 'DELETE' });
+                
+                if (response.ok) {
+                    await fetch(`/admin/complaint/reject/${journalId}`, { method: 'DELETE' });
+                }
+            } else {
+                response = await fetch(`/admin/complaint/reject/${journalId}`, { method: 'DELETE' });
+            }
+
+            if (response.ok) {
+                const element = document.getElementById(`complaint-row-${journalId}`);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        loadAdminComplaints();
+                    }, 300);
+                }
+            } else {
+                alert('Не удалось выполнить действие');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Ошибка связи с сервером');
+        }
+    };
+
+    loadAdminComplaints();
 });

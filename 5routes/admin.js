@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const forumController = require('../3controllers/forumController');
 const calendarController = require('../3controllers/calendarController');
+const documentController = require('../3controllers/documentController');
 
 function isAdmin(req, res, next) {
     if (req.session.userId && req.session.role === 'admin') {
@@ -21,6 +22,9 @@ router.get('/pending-events', calendarController.renderPendingEvents);
 router.post('/calendar/approve', calendarController.approveEvent);
 router.delete('/calendar/reject/:id', calendarController.deleteEvent);
 
+//Profile sections
+router.get('/complaints-events', isAdmin, documentController.getComplaintsJSON);
+router.delete('/complaint/reject/:id', isAdmin, documentController.rejectComplaint);
 //publication news (for latest versions and future)
 router.post('/post-news', isAdmin, async (req, res) => {
     try {
