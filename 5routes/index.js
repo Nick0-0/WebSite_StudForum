@@ -32,6 +32,7 @@ router.get('/', async (req, res) => {
 //forum page
 router.get('/forum', isAuth, forumController.renderForum);
 router.post('/forum/topic', isAuth, forumController.createTopic);
+router.post('/forum/report', isAuth, forumController.reportForumItem);
 
 //documents page
 router.get('/document', isAuth, documentController.renderDocuments);

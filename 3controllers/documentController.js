@@ -134,7 +134,9 @@ const documentController = {
 
     getComplaintsJSON: async (req, res) => {
         const db = require('../db');
-        const sql = `SELECT * FROM Journal WHERE table_name = 'Documents' AND action_type = 'insert' ORDER BY id DESC`;
+        const sql = `SELECT * FROM Journal 
+        WHERE table_name IN ('Documents', 'Topics', 'Comments') AND action_type = 'insert' 
+        ORDER BY id DESC`;
 
         db.all(sql, [], (err, rows) => {
             if (err) {
@@ -145,13 +147,22 @@ const documentController = {
             const complaints = rows.map(row => {
                 try {
                     const parsedData = JSON.parse(row.new_data);
-                    if (parsedData.type === 'complaint') {
+                    if (parsedData.type && parsedData.type.startsWith('complaint')) {
+                        let targetTextName = '';
+                        if (row.table_name === 'Documents') {
+                            targetTextName = parsedData.document_name || `Документ #${parsedData.document_id || row.record_id}`;
+                        } else {
+                            targetTextName = parsedData.target_name || parsedData.reason_title || '';
+                        }
+
                         return {
                             journal_id: row.id,
                             student_id: row.user_id,
-                            document_id: parsedData.document_id,
+                            target_table: row.table_name,
+                            target_id: parsedData.document_id || parsedData.target_id || row.record_id,
+                            target_name: targetTextName,
                             reason: parsedData.reason,
-                            timeStamp: parsedData.timeStamp
+                            timestamp: parsedData.timestamp || parsedData.timeStamp || 'Время неизвестно'
                         };
                     }
                 } catch (error) {
@@ -169,7 +180,7 @@ const documentController = {
 
         db.run(sql, [req.params.id], (err) => {
             if (err) {
-                console.error(err);
+                console.error("Reject complaint DB error:", err);
                 return res.status(500).json({success: false, error: 'Database error'});
             }
 

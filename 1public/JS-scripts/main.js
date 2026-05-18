@@ -556,19 +556,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const complaints = await response.json();
 
             if (complaints && complaints.length > 0) {
-                complaintsContainer.innerHTML = complaints.map(c => `
-                    <div class="complaint-card" id="complaint-row-${c.journal_id}">
-                        <div class="complaint-card-body">
-                            <h4>Жалоба на Документ #${c.document_id}</h4>
-                            <p class="complaint-reason-text"><strong>Причина:</strong> <span class="reason-highlight">${c.reason}</span></p>
-                            <p class="complaint-meta-date">Отправил Студент #${c.student_id} | ${c.timestamp}</p>
+                complaintsContainer.innerHTML = complaints.map(c => {
+                    let categoryTitle = `Жалоба на Документ #${c.target_id}`;
+                    let deleteRoute = `/document/delete/${c.target_id}`;
+                    
+                    const objectIdentifier = c.target_name ? `"${c.target_name}"` : `#${c.target_id}`;
+
+                    if (c.target_table === 'Documents') {
+                        categoryTitle = `Жалоба на Документ ${objectIdentifier}`;
+                    } else if (c.target_table === 'Topics') {
+                        categoryTitle = `Жалоба на Тему форума ${objectIdentifier}`;
+                        deleteRoute = `/admin/topic/${c.target_id}`;
+                    } else if (c.target_table === 'Comments') {
+                        categoryTitle = `Жалоба на Комментарий ${objectIdentifier}`;
+                        deleteRoute = `/admin/comment/delete/${c.target_id}`;
+                    }
+
+                    return `
+                        <div class="complaint-card" id="complaint-row-${c.journal_id}">
+                            <div class="complaint-card-body">
+                                <h4>${categoryTitle}</h4>
+                                <p class="complaint-reason-text"><strong>Причина:</strong> <span class="reason-highlight">${c.reason}</span></p>
+                                <p class="complaint-meta-date">Отправил Студент #${c.student_id} | ${c.timestamp}</p>
+                            </div>
+                            <div class="complaint-card-actions">
+                                <!-- Кнопка удаления нарушающего элемента (использует динамический deleteRoute) -->
+                                <button class="btn-complaint-delete-doc" onclick="processAdminComplaint(${c.journal_id}, '${deleteRoute}')">Удалить объект</button>
+                                <button class="btn-complaint-reject" onclick="processAdminComplaint(${c.journal_id}, null)">Отклонить</button>
+                            </div>
                         </div>
-                        <div class="complaint-card-actions">
-                            <button class="btn-complaint-delete-doc" onclick="processComplaint(${c.journal_id}, ${c.document_id}, 'delete')">Удалить файл</button>
-                            <button class="btn-complaint-reject" onclick="processComplaint(${c.journal_id}, ${c.document_id}, 'reject')">Отклонить</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } else {
                 complaintsContainer.innerHTML = '<p class="empty-text">Жалоб от студентов пока нет. На сайте порядок!</p>';
             }
@@ -578,27 +596,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    window.processComplaint = async function(journalId, docId, action) {
+    window.processAdminComplaint = async function(journalId, deleteRoute) {
+        const isDelete = deleteRoute !== null && deleteRoute !== undefined;
         try {
-            let response;
-            if (action === 'delete') {
-                response = await fetch(`/document/delete/${docId}`, { method: 'DELETE' });
-                
-                if (response.ok) {
-                    await fetch(`/admin/complaint/reject/${journalId}`, { method: 'DELETE' });
-                }
-            } else {
-                response = await fetch(`/admin/complaint/reject/${journalId}`, { method: 'DELETE' });
+            let responseOk = true;
+            
+            if (isDelete) {
+                const resObj = await fetch(deleteRoute, { method: 'DELETE' });
+                responseOk = resObj.ok;
             }
 
-            if (response.ok) {
-                const element = document.getElementById(`complaint-row-${journalId}`);
-                if (element) {
-                    element.style.opacity = '0';
-                    element.style.transform = 'translateX(20px)';
-                    setTimeout(() => {
-                        loadAdminComplaints();
-                    }, 300);
+            if (responseOk) {
+                const resJournal = await fetch(`/admin/complaint/reject/${journalId}`, { method: 'DELETE' });
+                
+                if (resJournal.ok) {
+                    const element = document.getElementById(`complaint-row-${journalId}`);
+                    if (element) {
+                        element.style.opacity = '0';
+                        element.style.transform = 'translateX(20px)';
+                        setTimeout(() => { loadAdminComplaints(); }, 300);
+                    }
                 }
             } else {
                 alert('Не удалось выполнить действие');
@@ -610,4 +627,60 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     loadAdminComplaints();
+
+    //---------------------------------------------------------
+    // UNIVERSAL REPORT FUNCIONAL ON FORUM (AJAX)
+    //---------------------------------------------------------
+    const forumComplaintModal = document.getElementById('forum-complaint-modal');
+    const forumComplaintForm = document.getElementById('forum-complaint-form');
+
+    window.reportForumItem = function(itemId, itemTitle, targetType) {
+        if (!forumComplaintModal) return;
+        
+        document.getElementById('forum-complaint-id').value = itemId;
+        document.getElementById('forum-complaint-type').value = targetType;
+        document.getElementById('forum-complaint-target-title').textContent = itemTitle;
+        
+        const header = document.getElementById('forum-complaint-header');
+        header.textContent = targetType === 'topic' ? 'Жалоба на тему форума' : 'Жалоба на комментарий';
+        
+        forumComplaintModal.style.display = 'flex';
+    };
+
+    if (forumComplaintForm) {
+        forumComplaintForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const itemId = document.getElementById('forum-complaint-id').value;
+            const itemTitle = document.getElementById('forum-complaint-target-title').textContent;
+            const targetType = document.getElementById('forum-complaint-type').value;
+            const reason = document.getElementById('forum-complaint-reason').value;
+
+            try {
+                const response = await fetch('/forum/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        itemId: itemId,
+                        itemName: itemTitle,
+                        targetType: targetType,
+                        reason: reason
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Жалоба успешно отправлена модераторам!');
+                    forumComplaintModal.style.display = 'none';
+                    forumComplaintForm.reset();
+                } else {
+                    alert('Не удалось отправить жалобу');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Ошибка связи с сервером');
+            }
+        });
+    }
 });

@@ -64,14 +64,49 @@ const forumController = {
     //delete topic (only for admins)
     deleteTopic: async (req, res) => {
         if (req.session.role !== 'admin') {
-            return res.status(403).send('Not access rights');
+            return res.status(403).json({success: false, error: 'Not access rights'});
         }
 
         try {
-            await Topic.delete(req.params.id);
+            const topicId = req.params.id;
+            await Topic.delete(topicId);
             res.json({success: true});
         } catch (error) {
-            res.status(500).send('Delete topic error');
+            console.error("CRITICAL DB ERROR BY DELETE TOPIC:", error);
+            res.status(500).json({success: false, error: 'Delete topic error'});
+        }
+    },
+
+    reportForumItem: async (req, res) => {
+        const db = require('../db');
+        try {
+            const { itemId, itemName, targetType, reason } = req.body;
+            const studentId = req.session.userId;
+
+            const tableName = targetType === 'topic' ? 'Topics' : 'Comments';
+            const payload = { 
+                type: `complaint_${targetType}`,
+                target_id: itemId,
+                target_name: itemName,
+                reason: reason, 
+                timestamp: new Date().toLocaleString('ru-RU') 
+            };
+
+            const sql = `
+                INSERT INTO Journal (table_name, record_id, action_type, new_data, type_of_user, user_id)
+                VALUES (?, ?, 'insert', ?, 'student', ?)
+            `;
+
+            db.run(sql, [tableName, itemId, JSON.stringify(payload), studentId], (err) => {
+                if (err) {
+                    console.error("Report forum save error:", err);
+                    return res.status(500).json({ success: false, error: 'Database error' });
+                }
+                return res.json({ success: true });
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ success: false, error: 'Server error' });
         }
     },
 

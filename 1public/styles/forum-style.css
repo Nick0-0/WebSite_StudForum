@@ -329,3 +329,43 @@
 .topic-card.admin:hover .topic-title {
     color: #d9534f;
 }
+
+/*-----------------------------------------
+    FORUM REPORTING
+------------------------------------------*/
+.forum-card-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.btn-report-item {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 13pt;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 5px;
+}
+.btn-report-item:hover {
+    color: #f0ad4e;
+    transform: scale(1.2);
+}
+.comment-actions-zone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.btn-report-comment-flag {
+    background: transparent;
+    border: none;
+    color: #bbb;
+    font-size: 11pt;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+.btn-report-comment-flag:hover {
+    color: #f0ad4e;
+    transform: scale(1.15);
+}
