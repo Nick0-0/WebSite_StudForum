@@ -35,6 +35,7 @@ router.post('/forum/topic', isAuth, forumController.createTopic);
 
 //documents page
 router.get('/document', isAuth, documentController.renderDocuments);
+router.post('/document/report', isAuth, documentController.reportDocument);
 router.post('/document/upload', isAuth, uploadDisk.single('doc'), documentController.uploadDocument);
 router.get('/document/download/:id', isAuth, documentController.downloadDocument);
 router.delete('/document/delete/:id', isAuth, documentController.deleteDocument);

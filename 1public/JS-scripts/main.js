@@ -498,4 +498,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
+
+    //---------------------------------------------------------
+    // DOCUMENT REPORT BY STUDENT FUNCTIONAL (AJAX)
+    //---------------------------------------------------------
+    const complaintModal = document.getElementById('complaint-modal');
+    const complaintForm = document.getElementById('complaint-form');
+
+    window.reportDocument = function(docId, docName) {
+        if (!complaintForm) return;
+        document.getElementById('complaint-doc-id').value = docId;
+        document.getElementById('complaint-doc-title').textContent = docName;
+        complaintModal.style.display = 'flex';
+    };
+
+    if (complaintForm) {
+        complaintForm.addEventListener('submit', async (e) => {
+            const docId = document.getElementById('complaint-doc-id').value;
+            const reason = document.getElementById('complaint-reason').value;
+
+            try {
+                const response = await fetch('/document/report', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        documentId: docId,
+                        reason: reason
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Ваша жалоба успешно отправлена модераторам на рассмотрение!');
+                    complaintModal.style.display = 'none';
+                    complaintForm.reset();
+                } else {
+                    alert('Не удалось отправить жалобу');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Ошибка связи с сервером');
+            }
+        })
+    }
 });

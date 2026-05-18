@@ -1,3 +1,4 @@
+const { timeStamp, error } = require('console');
 const Document = require('../4models/Document');
 const fs = require('fs');
 
@@ -79,6 +80,43 @@ const documentController = {
             res.json(myDocs);
         } catch (error) {
             res.status(500).json({error: 'Download private documents error'});
+        }
+    },
+
+    reportDocument: async (req, res) => {
+        const db = require('../db');
+        try {
+            const {documentId, reason} = req.body;
+            const studentId = req.session.userId;
+
+            console.log("Report data from student:", {documentId, reason, studentId});
+
+            if (!documentId || !reason) {
+                return res.status(400).json({success: false, error: 'Missing fields'});
+            }
+
+            const payLoad = {
+                type: 'complaint',
+                document_id: documentId, 
+                reason: reason, 
+                timeStamp: new Date().toLocaleDateString('ru-RU')
+            };
+
+            const sql = `
+                INSERT INTO Journal (table_name, record_id, action_type, new_data, type_of_user, user_id)
+                VALUES ('Documents', ?, 'insert', ?, 'student', ?)
+            `;
+
+            db.run(sql, [documentId, JSON.stringify(payLoad), studentId], function(err) {
+                if (err) {
+                    console.error("Report document error:", err);
+                    return res.status(500).json({success: false, error: 'Database save error'});
+                }
+                return res.json({success: true});
+            });
+        } catch (error) {
+            console.error("Method reportDocument error:", error);
+            res.status(500).json({success: false, error: 'Report document error'});
         }
     },
 

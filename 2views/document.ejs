@@ -35,13 +35,19 @@
                         </div>
                     </a>
 
+                    <div class="doc-card-actions-panel">
+                    <% if (role === 'student') { %>
+                        <button class="btn-report-doc" onclick="reportDocument('<%= doc.id %>', '<%= displayName %>')"
+                            title="Пожаловаться на файл">
+                                Пожаловаться
+                            </button>
+                    <% } %>
                     <% if (role === 'admin') { %>
-                        <div class="admin-doc-actions">
                             <button class="btn-admin-delete-doc" onclick="adminDeleteDocument('<%= doc.id %>')">
                                 Удалить файл
                             </button>
-                        </div>
                     <% } %>
+                    </div>
                 </div>
             <% }) %>
         <% } else { %>
@@ -73,6 +79,46 @@
                 <button type="button" class="btn-cancel" onclick="document.getElementById('upload-modal').style.display='none'">
                     Отмена
                 </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="complaint-modal" class="modal">
+    <div class="modal-content">
+        <h3>Жалоба на учебный материал</h3>
+        <p id="complaint-doc-title" style="font-weight: bold; color: #333;
+        text-align: center; margin-bottom: 15px;"></p>
+
+        <form id="complaint-form" class="upload-form">
+            <input type="hidden" id="complaint-doc-id">
+
+            <div class="select-field">
+                <label for="complaint-reason">Укажите причину:</label>
+                <select id="complaint-reason" required>
+                    <option value="" disabled>-- Выберите причину --</option>
+                    <option value="Файл поврежден / не открывается">
+                        Файл поврежден / не открывается
+                    </option>
+                    <option value="Недостоверная / ложная информация">
+                        Недостоверная / ложная информация
+                    </option>
+                    <option value="Материал содержит плагиат">
+                        Материал содержит плагиат
+                    </option>
+                    <option value="Спам или вредоносное ПО">
+                        Спам или вредоносное ПО
+                    </option>
+                    <option value="Другое">
+                        Другое
+                    </option>
+                </select>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-submit">Отправить жалобу</button>
+                <button type="button" class="btn-cancel"
+                onclick="document.getElementById('complaint-modal').style.display = 'none'">Отмена</button>
             </div>
         </form>
     </div>

@@ -255,10 +255,11 @@
     gap: 10px;
     transition: all 0.3s ease;
 }
-.admin-doc-actions {
+.doc-card-actions-panel {
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 5px;
 }
 .btn-admin-delete-doc {
     width: 90%;
@@ -277,4 +278,22 @@
     color: white;
     box-shadow: 0 4px 10px rgba(217, 83, 79, 0.2);
     transform: scale(1.02);
+}
+.btn-report-doc {
+    width: 90%;
+    height: 32px;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    border: 1px solid #faebcc;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 8.5pt;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-report-doc:hover {
+    background-color: #f0ad4e;
+    color: white;
+    box-shadow: 0 4px 10px rgba(240, 173, 78, 0.2);
+    border-color: #f0ad4e;
 }
