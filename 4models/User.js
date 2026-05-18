@@ -2,19 +2,19 @@ const db = require('../db');
 const bcrypt = require('bcrypt');
 
 class User {
-    static async findByLogin(login) {
-        const student = await new Promise((resolve) => {
-            db.get('SELECT *, "student" as role FROM Students WHERE login = ?', 
-                [login], (err, row) => resolve(row));
-        });
-        if (student) return student;
+    // static async findByLogin(login) {
+    //     const student = await new Promise((resolve) => {
+    //         db.get('SELECT *, "student" as role FROM Students WHERE login = ?', 
+    //             [login], (err, row) => resolve(row));
+    //     });
+    //     if (student) return student;
 
-        const admin = await new Promise((resolve) => {
-            db.get('SELECT *, "admin" as role FROM Admins WHERE login = ?', 
-                [login], (err, row) => resolve(row));
-        });
-        return admin || null;
-    }
+    //     const admin = await new Promise((resolve) => {
+    //         db.get('SELECT *, "admin" as role FROM Admins WHERE login = ?', 
+    //             [login], (err, row) => resolve(row));
+    //     });
+    //     return admin || null;
+    // }
 
     static async createStudent(data) {
         const {login, first_name, last_name, email, phone_number,
@@ -55,9 +55,24 @@ class User {
 
         return new Promise((resolve, reject) => {
             db.get(`SELECT * FROM ${table} WHERE id = ?`, [id], (err, row) => {
-                if (err) reject(err);
+                if (err) return reject(err);
                 if (row) delete row.password;
                 resolve(row);
+            });
+        });
+    }
+
+    static async getAllRaw() {
+        return new Promise((resolve, reject) => {
+            db.all('SELECT *, "student" AS role FROM Students', [], (err, students) => {
+                if (err) return reject(err);
+
+                db.all('SELECT *, "admin" AS role FROM Admins', [], (err2, admins) => {
+                    if (err2) return reject(err2);
+
+                    const allUsers = [...(students || []), ...(admins || [])];
+                    resolve(allUsers);
+                });
             });
         });
     }

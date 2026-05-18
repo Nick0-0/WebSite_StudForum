@@ -1,5 +1,6 @@
 const User = require('../4models/User');
 const bcrypt = require('bcrypt');
+const CryptoHelper = require('../4models/CryptoHelper');
 
 const userController = {
     //displaying the login/registration page
@@ -17,6 +18,10 @@ const userController = {
     //student registration processing
     register: async (req, res) => {
         try {
+            if (req.body.login) {
+                req.body.login = CryptoHelper.encrypt(req.body.login);
+            }
+
             const userId = await User.createStudent(req.body);
 
             req.session.userId = userId.id;
@@ -38,7 +43,8 @@ const userController = {
     login: async (req, res) => {
         const {login, password} = req.body;
         try {
-            const user = await User.findByLogin(login);
+            const users = await User.getAllRaw();
+            const user = users.find(u => CryptoHelper.decrypt(u.login) === login);
 
             if (user) {
                 //old version without admin login ->|
@@ -71,6 +77,10 @@ const userController = {
             const user = await User.getById(req.session.userId, req.session.role);
 
             if (!user) return res.redirect('/auth');
+
+            if (user.login) {
+                user.login = CryptoHelper.decrypt(user.login);
+            }
 
             res.render('profile', {
                 user: user, role: req.session.role
