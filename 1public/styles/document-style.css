@@ -79,6 +79,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
     box-sizing: border-box;
     text-align: center;
+    height: auto !important;
 }
 .doc-card:hover {
     transform: translateY(-5px);
@@ -117,13 +118,22 @@
     overflow: hidden;
     text-overflow: ellipsis; 
 }
-.doc-author {
+.doc-author, .doc-topic-link {
     margin: 0;
     font-size: 9pt;
     color: #777;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.doc-topic-link {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 .empty-text {
     grid-column: 1 / -1;

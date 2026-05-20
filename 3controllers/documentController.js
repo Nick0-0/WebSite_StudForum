@@ -53,35 +53,64 @@ const documentController = {
     //download document
     downloadDocument: async (req, res) => {
         try {
-            const doc = await Document.getById(req.params.id);
-            if (!doc) return res.status(404).send('File not found');
+            console.log(`[DEBUGGING] METHOD downloadDocument WAS CALLED TO FILE ID: ${req.params.id}`);
+            const documentRecord = await Document.getById(req.params.id);
+            if (!documentRecord) return res.status(404).send('File not found');
 
             let ext = '.txt';
 
-            if (doc.doc) {
-                const buffer = Buffer.from(doc.doc);
+            //plan BETA
+            if (documentRecord.type_of_document && documentRecord.type_of_document.includes(':')) {
+                const match = documentRecord.type_of_document.match(/\.(docx|pdf|txt)$/i);
+                if (match) {
+                    ext = match[0].toLowerCase();
+                }
+            }
+
+            if (documentRecord.doc) {
+                // const buffer = Buffer.from(doc.doc);
+                //const buffer = Buffer.isBuffer(doc.doc) ? doc.doc : Buffer.from(doc.doc);
                 
+                let buffer;
+                if (Buffer.isBuffer(documentRecord.doc)) {
+                    buffer = documentRecord.doc;
+                } else if (typeof documentRecord.doc === 'string') {
+                    buffer = Buffer.from(documentRecord.doc, 'binary');
+                } else {
+                    buffer = Buffer.from(documentRecord.doc);
+                }
+
                 if (buffer.length > 4) {
-                    if (buffer.toString('ascii', 0, 2) === 'PK') {
+                    const hexSignature = buffer.toString('hex', 0, 4);
+
+                    console.log(`[DEBUGGING] Hex-title of file #${documentRecord.id}:`, hexSignature);
+
+                    //plan ALFA
+                    if (hexSignature.startsWith('504b')) {
                         ext = '.docx';
                     }
-                    else if (buffer.toString('ascii', 0, 4) === '%PDF') {
+                    else if (hexSignature.startsWith('25504446')) {
                         ext = '.pdf';
                     }
                 }
 
-                let downloadName = `document_${doc.id}${ext}`;
-                if (doc.type_of_document && doc.type_of_document.includes(':')) {
-                    downloadName = doc.type_of_document.split(':')[1] + ext;
+                let downloadName = `document_${documentRecord.id}`;
+                if (documentRecord.type_of_document && documentRecord.type_of_document.includes(':')) {
+                    const parts = documentRecord.type_of_document.split(':');
+                    let rawName = parts.slice(1).join(':');
+
+                    downloadName = rawName.replace(/\.(docx|pdf|txt)$/i, '');
                 }
+                const finalFileName = downloadName + ext;
                 
                 res.setHeader('Content-Type', 'application/octet-stream');
-                res.setHeader('Content-Disposition', `attachment; filename*=UTF-8""${encodeURIComponent(downloadName)}`);
+                res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(finalFileName)}`);
                 
-                return res.send(doc.doc);
+                return res.send(buffer);
             }
             res.status(404).send('File data is empty');
         } catch (error) {
+            console.error('CRITICAL Download file controller error:', error);
             res.status(500).send('Download doc error');
         }
     },
