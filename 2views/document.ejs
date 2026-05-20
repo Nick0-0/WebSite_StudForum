@@ -20,7 +20,7 @@
                     let displayName = 'Документ #' + doc.id;
                     if (doc.type_of_document && doc.type_of_document.includes(':')) {
                         const parts = doc.type_of_document.split(':');
-                        if (parts[1]) displayName = parts[1];
+                        displayName = parts.slice(1).join(':');
                     }
                 %>
 
@@ -30,7 +30,7 @@
                             <img src="/media/file-icon.png" alt="File" class="doc-icon">
                         </div>
                         <div class="doc-info">
-                            <span class="doc-name">Документ #<%= doc.id %></span>
+                            <span class="doc-name"><%= displayName %></span>
                             <p class="doc-author">Автор: <%= doc.first_name %> <%= doc.last_name %></p>
                             
                             <% if (doc.topic_name) { %>

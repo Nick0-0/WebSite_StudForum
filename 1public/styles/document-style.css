@@ -80,6 +80,7 @@
     box-sizing: border-box;
     text-align: center;
     height: auto !important;
+    min-height: 200px;
 }
 .doc-card:hover {
     transform: translateY(-5px);
@@ -114,7 +115,10 @@
     font-weight: bold;
     color: #296a4a !important;
     font-size: 11pt;
-    white-space: nowrap;
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis; 
 }
@@ -122,11 +126,7 @@
     margin: 0;
     font-size: 9pt;
     color: #777;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.doc-topic-link {
+
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -134,6 +134,7 @@
     text-align: center;
     width: 100%;
     box-sizing: border-box;
+    text-overflow: ellipsis;
 }
 .empty-text {
     grid-column: 1 / -1;
@@ -263,7 +264,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
     transition: all 0.3s ease;
+    container-type: inline-size;
 }
 .doc-card-actions-panel {
     width: 100%;
