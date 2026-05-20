@@ -176,16 +176,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `
                     <div class="profile-doc-row" id="doc-block-${doc.id}">
                         <div class="profile-doc-info">
-                            <img src="media/file-icon.png" alt="Doc" class="profile-doc-icon">
+                            <img src="/media/file-icon.png" alt="Doc" class="profile-doc-icon">
                             <div class="profile-doc-meta">
                                 <span class="profile-doc-name">${displayName}</span>
-                                <span class="profile-doc-badge ${privacyLabel}">${privacyLabel}</span>
+                                <div class="profile-doc-badges-zone" style="display:flex; gap:10px; align-items:center; margin-top:4px;">
+                                    <span class="profile-doc-badge ${privacyLabel}">${privacyLabel === 'public' ? 'публичный' : 'приватный'}</span>
+                                    <!-- ИСПРАВЛЕНО: Если у файла в профиле есть привязанная тема, выводим её маркер -->
+                                    ${doc.topic_name ? `<span class="profile-doc-topic-badge" style="font-size:8pt; color:#296a4a; font-weight:bold;">📌 Тема: ${doc.topic_name}</span>` : ''}
+                                </div>
                             </div>
                         </div>
                         <div class="profile-doc-actions">
-                            <a href="/document/download/${doc.id}" class="btn-profile-download" title="Скачать файл">
-                                Скачать
-                            </a>
+                            <a href="/document/download/${doc.id}" class="btn-profile-download" title="Скачать файл">Скачать</a>
                             <button class="btn-delete-doc-cross" onclick="deleteProfileDocument(${doc.id})" title="Удалить документ">&times;</button>
                         </div>
                     </div>

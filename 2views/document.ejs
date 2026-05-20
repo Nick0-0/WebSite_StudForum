@@ -32,6 +32,10 @@
                         <div class="doc-info">
                             <span class="doc-name">Документ #<%= doc.id %></span>
                             <p class="doc-author">Автор: <%= doc.first_name %> <%= doc.last_name %></p>
+                            
+                            <% if (doc.topic_name) { %>
+                                <p class="doc-topic-link">Тема: <span style="color: #296a4a; font-weight: bold;"><%= doc.topic_name %></span></p>
+                            <% } %>
                         </div>
                     </a>
 
@@ -71,6 +75,18 @@
                 <select name="type_of_document" id="doc-type" required>
                     <option value="public">Публичный (виден всем во вкладке)</option>
                     <option value="private">Приватный (виден только мне в профиле)</option>
+                </select>
+            </div>
+
+            <div class="input-field">
+                <label for="document-topic">Привязать к теме на форуме (необязательно):</label>
+                <select name="topic_id" id="document-topic">
+                    <option value="">-- Без привязки к теме --</option>
+                    <% if (typeof topics !== 'undefined' && topics.length > 0) { %>
+                        <% topics.forEach(topic => { %>
+                            <option value="<%= topic.id %>"><%= topic.name %></option>
+                        <% }) %>
+                    <% } %>
                 </select>
             </div>
 

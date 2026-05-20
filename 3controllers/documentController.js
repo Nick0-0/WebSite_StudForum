@@ -1,5 +1,6 @@
 const { timeStamp, error } = require('console');
 const Document = require('../4models/Document');
+const Topic = require('../4models/ForumPost');
 const fs = require('fs');
 
 const documentController = {
@@ -7,12 +8,15 @@ const documentController = {
     renderDocuments: async (req, res) => {
         try {
             const documents = await Document.getPublic();
+            const topics = await Topic.getAll();
+
             res.render('document', {
-                documents, 
-                user: req.session.userId,
+                documents,
+                topics,
                 role: req.session.role
             });
         } catch (error) {
+            console.error(error);
             res.status(500).send('Loading list of documents error');
         }
     },
@@ -20,16 +24,19 @@ const documentController = {
     //Uploading (create) new document
     uploadDocument: async (req, res) => {
         try {
+            const {type_of_document, custom_name, topic_id} = req.body;
+            const studentId = req.session.userId;
+
             if (!req.file) {
                 return res.status(400).send('File is not selected');
             }
 
-            const { type_of_document } = req.body;
-            const studentId = req.session.userId;
-
+            const fileName = req.file.originalname;
             const fileData = fs.readFileSync(req.file.path);
 
-            await Document.create(type_of_document, studentId, fileData);
+            const finalType = type_of_document === 'private' ? 'private' : `public:${custom_name || fileName}`;
+
+            await Document.create(studentId, fileData, finalType, topic_id);
 
             fs.unlinkSync(req.file.path);
 
@@ -62,9 +69,14 @@ const documentController = {
                         ext = '.pdf';
                     }
                 }
+
+                let downloadName = `document_${doc.id}${ext}`;
+                if (doc.type_of_document && doc.type_of_document.includes(':')) {
+                    downloadName = doc.type_of_document.split(':')[1] + ext;
+                }
                 
                 res.setHeader('Content-Type', 'application/octet-stream');
-                res.setHeader('Content-Disposition', `attachment; filename=document_${doc.id}${ext}`);
+                res.setHeader('Content-Disposition', `attachment; filename*=UTF-8""${encodeURIComponent(downloadName)}`);
                 
                 return res.send(doc.doc);
             }
@@ -76,10 +88,12 @@ const documentController = {
 
     getMyDocuments: async (req, res) => {
         try {
-            const myDocs = await Document.getByStudentId(req.session.userId);
-            res.json(myDocs);
+            const studentId = req.session.userId;
+            const docs = await Document.getByStudentId(studentId);
+            return res.json(docs);
         } catch (error) {
-            res.status(500).json({error: 'Download private documents error'});
+            console.error(error);
+            return res.status(500).json({ error: 'API load personal documents error' });
         }
     },
 

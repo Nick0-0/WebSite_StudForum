@@ -1,20 +1,16 @@
 const db = require('../db');
 
 class Document {
-    static async create(type, studentId, docData) {
-        const validTypes = ['private', 'public'];
-
-        if (!validTypes.includes(type)) {
-            throw new Error('Invalid type of doc');
-        }
+    static async create(studentId, fileData, typeOfDocument, topicId) {
+        const finalTopicId = topicId === '' || topicId === undefined ? null : topicId;
 
         const sql =`
-        INSERT INTO Documents (type_of_document, student_id, doc)
-        VALUES (?, ?, ?)
+        INSERT INTO Documents (student_id, doc, type_of_document, topic_id)
+        VALUES (?, ?, ?, ?)
         `;
 
         return new Promise((resolve, reject) => {
-            db.run(sql, [type, studentId, docData], function(err) {
+            db.run(sql, [studentId, fileData, typeOfDocument, finalTopicId], function(err) {
                 if (err) return reject(err);
                 resolve({id: this.lastID});
             });
@@ -32,9 +28,10 @@ class Document {
 
     static async getPublic() {
         const sql = `
-        SELECT d.id, d.type_of_document, d.student_id, s.first_name, s.last_name
+        SELECT d.id, d.type_of_document, d.student_id, s.first_name, s.last_name, t.name AS topic_name
         FROM Documents d JOIN Students s ON d.student_id = s.id
-        WHERE d.type_of_document = 'public'
+        LEFT JOIN Topics t ON d.topic_id = t.id
+        WHERE d.type_of_document LIKE 'public:%'
         ORDER BY d.id DESC
         `;
 
@@ -47,10 +44,17 @@ class Document {
     }
 
     static async getByStudentId(studentId) {
+        const sql = `
+            SELECT d.id, d.type_of_document, d.topic_id, t.name as topic_name
+            FROM Documents d
+            LEFT JOIN Topics t ON d.topic_id = t.id
+            WHERE d.student_id = ?
+            ORDER BY d.id DESC
+        `;
         return new Promise((resolve, reject) => {
-            db.all('SELECT * FROM Documents WHERE student_id = ?', [studentId], (err, rows) => {
+            db.all(sql, [studentId], (err, rows) => {
                 if (err) return reject(err);
-                resolve(rows);
+                resolve(rows || []);
             });
         });
     }
