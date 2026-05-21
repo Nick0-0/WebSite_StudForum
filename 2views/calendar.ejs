@@ -39,11 +39,17 @@
             
             <% for(let i = 1; i <= daysInMonth; i++) { %>
                 <% 
-                const dayStr = i < 10 ? '0' + i : String(i);
-                const dayEvents = events.filter(e => e.start_date && e.start_date.startsWith(dayStr));
+                    const dayStr = i < 10 ? '0' + i : String(i);
+
+                    const currentMonthNum = (monthIndex + 1) < 10 ? '0' + (monthIndex + 1) : String(monthIndex + 1);
+
+                    const fullDateMatchStr = `${year}-${currentMonthNum}-${dayStr}`;
+
+                    const dayEvents = events.filter(e => e.start_date && e.start_date.startsWith(fullDateMatchStr));
                 %>
                 <div class="calendar-day <%= dayEvents.length > 0 ? 'has-event' : '' %>">
                     <span class="day-number"><%= i %></span>
+
                     <% if (dayEvents.length > 0) { %>
                         <div class="day-events-container">
                             <% dayEvents.forEach(event => { %>
