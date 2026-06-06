@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const forumController = require('../3controllers/forumController');
-const documentController = require('../3controllers/documentController');
-const calendarController = require('../3controllers/calendarController');
+const forumController = require('../controllers/forumController');
+const documentController = require('../controllers/documentController');
+const calendarController = require('../controllers/calendarController');
 
 //Forum API
 router.get('/topics/search', forumController.renderForum);
@@ -21,7 +21,7 @@ router.get('/calendar/events', calendarController.renderCalendar);
 
 //Profile API
 router.get('/my-notes', async (req, res) => {
-    const Note = require('../4models/Note');
+    const Note = require('../models/Note');
     try {
         const notes = await Note.getByStudentId(req.session.userId);
         res.json(notes);

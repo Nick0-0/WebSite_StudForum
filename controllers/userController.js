@@ -1,6 +1,6 @@
-const User = require('../4models/User');
+const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const CryptoHelper = require('../4models/CryptoHelper');
+const CryptoHelper = require('../models/CryptoHelper');
 
 const userController = {
     //displaying the login/registration page
@@ -139,7 +139,7 @@ const userController = {
     },
 
     createNote: async (req, res) => {
-        const Note = require('../4models/Note');
+        const Note = require('../models/Note');
         try {
             const {description} = req.body;
             const studentId = req.session.userId;
@@ -153,7 +153,7 @@ const userController = {
     },
 
     deleteNote: async (req, res) => {
-        const Note = require('../4models/Note');
+        const Note = require('../models/Note');
         try {
             const noteId = req.params.id;
             const studentId = req.session.userId;

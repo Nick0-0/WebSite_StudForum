@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const forumController = require('../3controllers/forumController');
-const calendarController = require('../3controllers/calendarController');
-const documentController = require('../3controllers/documentController');
+const forumController = require('../controllers/forumController');
+const calendarController = require('../controllers/calendarController');
+const documentController = require('../controllers/documentController');
 
 function isAdmin(req, res, next) {
     if (req.session.userId && req.session.role === 'admin') {
@@ -31,7 +31,7 @@ router.post('/post-news', isAdmin, async (req, res) => {
         const {title, content} = req.body;
         const adminId = req.session.userId;
 
-        const News = require('../4models/News');
+        const News = require('../models/News');
         await News.create(title, content, adminId);
         res.redirect('/profile');
     } catch (error) {

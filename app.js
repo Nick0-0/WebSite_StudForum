@@ -11,7 +11,7 @@ const app = express();
 
 //setting of templates
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '2views'));
+app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
 app.set('layout', 'layout');
 
@@ -42,10 +42,10 @@ app.use((req, res, next) => {
 });
 
 //including the routes
-const indexRoutes = require('./5routes/index');
-const authRoutes = require('./5routes/auth');
-const adminRoutes = require('./5routes/admin');
-const apiRoutes = require('./5routes/api');
+const indexRoutes = require('./routes/index');
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const apiRoutes = require('./routes/api');
 
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);

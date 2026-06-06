@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const forumController = require('../3controllers/forumController');
-const documentController = require('../3controllers/documentController');
-const calendarController = require('../3controllers/calendarController');
-const userController = require('../3controllers/userController');
+const forumController = require('../controllers/forumController');
+const documentController = require('../controllers/documentController');
+const calendarController = require('../controllers/calendarController');
+const userController = require('../controllers/userController');
 const multer = require('multer');
 const upload = multer();
-const News = require('../4models/News');
+const News = require('../models/News');
 
 function isAuth(req, res, next) {
     if (req.session.userId) {

@@ -1,6 +1,6 @@
 const { timeStamp, error } = require('console');
-const Document = require('../4models/Document');
-const Topic = require('../4models/ForumPost');
+const Document = require('../models/Document');
+const Topic = require('../models/ForumPost');
 const fs = require('fs');
 
 const documentController = {

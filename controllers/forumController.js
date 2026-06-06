@@ -1,5 +1,5 @@
-const Topic = require('../4models/ForumPost');
-const Comment = require('../4models/Comment');
+const Topic = require('../models/ForumPost');
+const Comment = require('../models/Comment');
 
 const forumController = {
     //displaying the main forum page
@@ -117,7 +117,7 @@ const forumController = {
 
         try {
             const commentId = req.params.id;
-            const comment = require('../4models/Comment');
+            const comment = require('../models/Comment');
 
             await Comment.delete(commentId);
 

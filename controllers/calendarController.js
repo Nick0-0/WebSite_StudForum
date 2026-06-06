@@ -1,4 +1,4 @@
-const Event = require('../4models/Event');
+const Event = require('../models/Event');
 
 const calendarController = {
     //displaying event-calendar
