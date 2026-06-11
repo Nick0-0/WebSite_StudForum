@@ -239,19 +239,33 @@ footer a:hover {
         padding: 5px;
     }
 
-    footer, .footer-info, .footer-navigation {
+    footer {
         width: 100%;
-        height: fit-content;
-        display: flex;
+        box-sizing: border-box;
         flex-direction: column;
-        padding: 5px 5px 15px;
-        /* padding: 5px; */
-        gap: 3px
+        height: auto;
+        padding: 20px 10px;
+        gap: 15px;
+        text-wrap-style: pretty;
+    }
+    footer div {
+        padding: 0;
+        justify-content: center;
+    }
+
+    .footer-navigation {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        line-height: 1.2;
+    }
+    .footer-navigation a {
+        margin: 0 5px 10px;
     }
     .social-icon {
         height: 50px;
         margin: 0 5px;
     }
-    .footer-info {gap: 5px;}
     /* .footer-info a {font-weight: bold;} */
 }
