@@ -74,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 notesContainer.innerHTML = notes.map(note => `
                         <div id="note-block-${note.id}" class="note-card">
                             <div class="note-card-header">
-                                <span class="note-badge">Заметка #${note.id}</span>
+                                <!--<span class="note-badge">Заметка #${note.id}</span> -->
+                                <span class="note-badge">Заметка #</span>
                                 <button class="btn-delete-note-cross" onclick="deleteNote(${note.id})" title="Удалить заметку">
                                     &times;
                                 </button>
