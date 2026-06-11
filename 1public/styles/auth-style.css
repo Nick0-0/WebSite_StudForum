@@ -119,3 +119,59 @@ a.back-btn:hover {
     font-size: 14px;
     margin: -10px 0 10px 0;
 }
+
+/*================================================================
+    ADAPTIVE STYLES TO MOBILE DEVICES
+================================================================*/
+
+@media (max-width: 768px) {
+    a.back-btn {
+        font-size: smaller;
+        margin: 5% 0 0;
+    }
+    .auth-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 15px;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .auth-box {
+        padding: 30px 20px;
+        min-width: 0;
+        flex: none;
+        width: 100%;
+        max-width: 400px;
+        box-sizing: border-box;
+        font-size: smaller;
+    }
+    .auth-form {
+        gap: 10px;
+        font-size: smaller;
+    }
+    .auth-form input {
+        height: 35px;
+        padding: 0 15px;
+        color: #333;
+        outline: none;
+        transition: box-shadow 0.3s ease;
+    }
+    .name-group, .study-group {
+        gap: 10px;
+    }
+    .name-group input, .study-group input {
+        width: 50%;
+    }
+    .auth-form select {
+        height: 35px;
+        padding: 0 15px;
+        background-position: right 15px center;
+    }
+    .btn-submit {
+        margin-top: 10px;
+        height: 45px;
+    }
+}
