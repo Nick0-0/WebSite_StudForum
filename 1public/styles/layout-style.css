@@ -1,3 +1,7 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 body {
     overflow-x: hidden;
     overflow-y: auto;
@@ -139,4 +143,112 @@ footer a:hover {
     text-align: center;
     text-wrap-style: pretty;
     line-height: 2;
+}
+
+.burger-menu, .auth-zone-mobile {display: none;}
+
+/*================================================================
+    ADAPTIVE STYLES TO MOBILE DEVICES
+================================================================*/
+
+@media (max-width: 768px) {
+    header {
+        height: 50px;
+        font-size: medium;
+        box-sizing: border-box;
+    }
+    .auth-zone {display: none;}
+    .auth-zone-mobile {
+        display: block;
+        margin-top: 10px;
+    }
+    .auth-zone-mobile .profile-btn {margin: 0 auto;}
+    .burger-menu {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 22px;
+        background: transparent !important;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        /* margin-right: 20px; */
+        /* flex-shrink: 0; */
+        box-shadow: none !important;
+
+        position: absolute !important;
+        right: 20px;
+        top: 15px;
+        z-index: 1001;
+    }
+    .burger-menu span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: #296a4a !important;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    nav.navigation-bar {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 100%;
+        background-color: whitesmoke;
+        padding: 20px 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        gap: 15px;
+        margin-left: 0 !important;
+        box-sizing: border-box;
+        z-index: 1000;
+    }
+    nav.navigation-bar.active {
+        display: flex !important;
+    }
+    /*Close animation*/
+    nav.navigation-bar.active ~ .burger-menu span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    nav.navigation-bar.active ~ .burger-menu span:nth-child(2) {
+        opacity: 0;
+    }
+    nav.navigation-bar.active ~ .burger-menu span:nth-child(3) {
+        transform: translateY(-10px) rotate(-45deg);
+    }
+    .nav-link {
+        width: 80%;
+        margin: 0 auto;
+        font-size: 13pt;
+    }
+    a.icon {
+        max-width: calc(100% - 80px);
+    }
+    a.icon p {
+    margin: 0 0 0 5px;
+    font-size: 14pt;
+    }
+    a.icon img {
+        height: 40px;
+    }
+
+    main {
+        margin-top: 50px;
+        padding: 5px;
+    }
+
+    footer, .footer-info, .footer-navigation {
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+        gap: 3px
+    }
+    .social-icon {
+        height: 50px;
+        margin: 0 5px;
+    }
 }

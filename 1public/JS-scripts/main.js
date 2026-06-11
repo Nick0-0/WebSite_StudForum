@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    //ADAPTIVE DEVELOP TO MOBILE DEVICES
+    const burgerBtn = document.getElementById('burgerBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    burgerBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+
     //automatic highlighting the active page
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.navigation-bar .nav-link');

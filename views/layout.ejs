@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Nick0-0">
     <meta name="descrition" content="Сайт студенческого форума - демонстрация полученных навыков веб-верстки в ходе обучения.">
+    
+    <meta property="og:title" content="СтудФорум">
+    <meta property="og:description" content="Новый централизованный ресурс для получения учебной информации, общения на форуме и просмотра списка событий!">
+    <meta property="og:image" content="../media/favicon.svg">
+    <!-- <meta property="og:url" content=""> -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="StudForum">
+
     <link rel="icon" href="./media/favicon.svg" type="image/svg+html">
+    <!-- icons to apple devices -->
+    <link rel="apple-touch-icon" href="../1public/media/apple-icon.png" sizes="180x180">
+    
     <link rel="stylesheet" href="styles/layout-style.css" type="text/css">
     <title>StudForum</title>
 </head>
@@ -14,11 +28,19 @@
             <img src="./media/favicon.svg" alt="icon.png">
             <p>студфорум</p>
         </a>
-        <nav class="navigation-bar">
+        <nav class="navigation-bar" id="navMenu">
             <a href="/" class="nav-link">Главная</a>
             <a href="/forum" class="nav-link">Форум</a>
             <a href="/document" class="nav-link">Документы</a>
             <a href="/calendar" class="nav-link">Календарь</a>
+
+            <div class="auth-zone-mobile">
+                <% if (user) { %>
+                    <a href="/profile" class="profile-btn">Профиль</a>
+                <% } else { %>
+                    <a href="/auth" class="profile-btn">Вход</a>
+                <% } %>
+            </div>
         </nav>
         <div class="auth-zone">
             <% if (user) { %>
@@ -27,6 +49,11 @@
                 <a href="/auth" class="profile-btn">Вход</a>
             <% } %>
         </div>
+        <button class="burger-menu" id="burgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
 
     <main id="main">
