@@ -153,3 +153,34 @@
     color: #888;
     font-style: italic;
 }
+
+/*================================================================
+    ADAPTIVE STYLES TO MOBILE DEVICES
+================================================================*/
+
+@media (max-width: 768px) {
+    .main-page-wrapper {
+        max-width: 100%;
+        padding: 15px 10px;
+    }
+    .main-content {
+        flex-direction: column;
+        font-size: smaller;
+        text-wrap-style: pretty;
+        text-align: center;
+        align-items: center;
+    }
+    .rules ul {
+        text-align: left;
+    }
+    .news-slider-section {
+        font-size: smaller;
+        text-wrap-style: pretty;
+        margin: 0 0 10px;
+    }
+    .slider-track-wrapper .news-slide-card .slide-header {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+}

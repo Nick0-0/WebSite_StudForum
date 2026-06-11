@@ -251,4 +251,6 @@ footer a:hover {
         height: 50px;
         margin: 0 5px;
     }
+    .footer-info {gap: 5px;}
+    .footer-info a {font-weight: bold;}
 }
