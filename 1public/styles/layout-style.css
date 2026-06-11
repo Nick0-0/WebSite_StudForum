@@ -244,7 +244,8 @@ footer a:hover {
         height: fit-content;
         display: flex;
         flex-direction: column;
-        padding: 5px;
+        padding: 5px 5px 15px;
+        /* padding: 5px; */
         gap: 3px
     }
     .social-icon {
@@ -252,5 +253,5 @@ footer a:hover {
         margin: 0 5px;
     }
     .footer-info {gap: 5px;}
-    .footer-info a {font-weight: bold;}
+    /* .footer-info a {font-weight: bold;} */
 }

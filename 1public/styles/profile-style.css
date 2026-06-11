@@ -633,3 +633,126 @@ DOCS_STYLES
     background-color: #e0e0e0;
     transform: scale(1.03);
 }
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .profile-sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-radius: 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        background-color: #e8e8e8;
+        position: sticky;
+        top: 50px;
+        z-index: 99;
+    }
+    .sidebar-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 15px;
+        gap: 8px;
+        box-sizing: border-box;
+    }
+    .sidebar-menu::-webkit-scrollbar {
+        display: none;
+    }
+    .sidebar-link, .sidebar-tab {
+        display: inline-block;
+        width: auto;
+        margin: 0;
+        padding: 8px 16px;
+        font-size: smaller;
+        white-space: nowrap;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .logout-btn {
+        margin-top: 0 !important;
+    }
+    .sidebar-tab:hover, .sidebar-link:hover {
+        transform: none;
+    }
+
+    .profile-content {
+        padding: 20px 15px;
+    }
+    .profile-header-block {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        gap: 15px;
+    }
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+    .avatar-container img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .user-meta h2 {
+        font-size: smaller;
+    }
+    .student-info-row {
+        justify-content: center;
+        gap: 10px;
+    }
+    .profile-inputs-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 15px;
+    }
+    .input-field:last-child {
+        grid-column: span 1;
+    }
+    .btn-save {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .profile-doc-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+    }
+    .profile-doc-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .btn-profile-download {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+    }
+
+    /* MODERATE EVENTS AND GHALOBY */
+    .pending-card, .complaint-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+    }
+    .pending-card-actions, .complaint-card-actions {
+        width: 100%;
+        min-width: 0 !important;
+    }
+    .btn-approve, .btn-reject, .btn-complaint-delete-doc, .btn-complaint-reject {
+        height: 42px;
+        font-size: 10pt;
+    }
+
+    /* NEWS ADDING FORM */
+    .profile-news-form {
+        max-width: 100%;
+    }
+    .profile-news-form .btn-save {
+        width: 100%;
+    }
+}

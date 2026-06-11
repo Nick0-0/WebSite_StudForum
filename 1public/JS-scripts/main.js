@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     //ADAPTIVE DEVELOP TO MOBILE DEVICES
-    const burgerBtn = document.getElementById('burgerBtn');
-    const navMenu = document.getElementById('navMenu');
+    const burgerBtn12 = document.getElementById('burgerBtn');
+    const navMenu12 = document.getElementById('navMenu');
     
-    burgerBtn.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+    burgerBtn12.addEventListener('click', () => {
+        navMenu12.classList.toggle('active');
     });
 
     //automatic highlighting the active page
