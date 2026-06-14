@@ -196,3 +196,35 @@ a.back-btn:hover {
     background-color: #ffffff;
     box-shadow: 0 0 8px rgba(41, 106, 74, 0.15);
 }
+
+/*================================================================
+    ADAPTIVE STYLES TO MOBILE DEVICES
+================================================================*/
+
+@media(max-width: 768px) {
+    .calendar-container {
+        box-sizing: border-box;
+        flex-direction: column;
+        gap: 20px;
+        padding: 5px 12px;
+        max-width: 100%;
+        width: 100%;
+    }
+    .calendar-main {
+        padding: 12px;
+        font-size: smaller;
+    }
+    .info-card {
+        padding: 12px;
+        font-size: smaller;
+    }
+    .btn-suggest {
+        margin-top: 15px;
+    }
+    .modal-content {
+        box-sizing: border-box;
+        margin: 0 10px;
+        width: 100%;
+        font-size: smaller;
+    }
+}
