@@ -1,5 +1,5 @@
 
-.documents-page {
+.doc-action-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 30px 20px;
@@ -20,7 +20,7 @@
 .search-box {
     flex: 1;
     min-width: 280px;
-    max-width: 500px;
+    max-width: 350px;
 }
 .search-box input {
     width: 100%;
@@ -310,4 +310,44 @@
     color: white;
     box-shadow: 0 4px 10px rgba(240, 173, 78, 0.2);
     border-color: #f0ad4e;
+}
+
+/*================================================================
+    ADAPTIVE STYLES TO MOBILE DEVICES
+================================================================*/
+
+@media(max-width: 768px) {
+    .docs-action-page {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px 12px;
+        box-sizing: border-box;
+    }
+    .docs-action-bar {
+        max-width: 100%;
+        width: 100%;
+        flex-direction: column;
+        justify-content: stretch;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .docs-action-bar .search-box {
+        max-width: 100%;
+        min-width: 0;
+        width: 100%;
+    }
+    .docs-action-bar .search-box input {
+        box-sizing: border-box;
+        width: 100%;
+        height: 42px;
+        padding: 0 20px;
+        font-size: smaller;
+    }
+    .docs-action-bar .btn-upload-trigger {
+        width: 90%;
+        height: 42px;
+        text-align: center;
+        align-self: center;
+        font-size: smaller;
+    }
 }
